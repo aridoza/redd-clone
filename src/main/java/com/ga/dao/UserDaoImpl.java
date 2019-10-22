@@ -31,4 +31,20 @@ public class UserDaoImpl implements UserDao {
 		
 		return allUsers;
 	}
+	
+	@Override
+	public User signup(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			session.save(user);
+			session.getTransaction().commit();
+		} finally {
+			session.close();
+		}
+		
+		return user;
+	}
+	
 }

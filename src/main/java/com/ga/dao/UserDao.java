@@ -8,4 +8,6 @@ public interface UserDao {
 	
 	public List<User> listUsers();
 
+	public User signup(User user);
+
 }

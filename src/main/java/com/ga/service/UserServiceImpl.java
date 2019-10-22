@@ -19,4 +19,9 @@ public class UserServiceImpl implements UserService {
 		return userDao.listUsers();
 	}
 	
+	@Override
+	public User signup(User user) {
+		return userDao.signup(user);
+	}
+	
 }
