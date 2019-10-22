@@ -11,5 +11,7 @@ public interface UserService {
 	public User signup(User user);
 	
 	public Long login(User user);
+	
+	public Long deleteUser(Long userId);
 		
 }

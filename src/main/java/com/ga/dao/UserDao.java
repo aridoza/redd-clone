@@ -12,4 +12,6 @@ public interface UserDao {
 
 	public User login(User user);
 	
+	public Long deleteUser(Long userId);
+	
 }
