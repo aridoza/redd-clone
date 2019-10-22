@@ -21,7 +21,7 @@ public class UserController {
 		return "Hello World!!";
 	}
 	
-private List<User> users;
+	private List<User> users;
 	
 	@PostConstruct
 	public void initializeUsers() {
