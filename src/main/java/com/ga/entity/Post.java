@@ -11,11 +11,11 @@ public class Post {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 	
-	public User getUser() {
-		return user;
+	public Long getUserId() {
+		return user.getUserId();
 	}
 	
-	public void setUser(User user) {
+	public void setUserId(User user) {
 		this.user = user;
 	}
 	
