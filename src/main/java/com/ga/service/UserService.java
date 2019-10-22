@@ -10,7 +10,7 @@ public interface UserService extends UserDetailsService {
 
 	public List<User> listUsers();
 	
-	public User signup(User user);
+	public String signup(User user);
 	
 	public String login(User user);
 	

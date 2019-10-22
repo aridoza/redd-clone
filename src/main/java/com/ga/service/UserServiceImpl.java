@@ -31,8 +31,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User signup(User user) {
-		return userDao.signup(user);
+	public String signup(User user) {
+		if (userDao.signup(user).getUserId() != null) {
+			UserDetails userDetails = loadUserByUsername(user.getUsername());
+
+			return jwtUtil.generateToken(userDetails);
+		}
+
+		return null;
 	}
 
 	@Override
