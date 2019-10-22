@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name="users")
 public class User {
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	private List<Post> posts;
 	
 	public void setPosts(List<Post> posts) {
