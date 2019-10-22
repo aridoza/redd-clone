@@ -1,25 +1,33 @@
 package com.ga.entity;
 
-public class User {
-	private Long userId;
-    private String username;
-    private String password;
-    private String email;
+import javax.persistence.*;
 
+@Entity
+@Table(name="users")
+public class User {
+
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+	
+    @Column(unique = true, nullable = false)
+    private String username;
+	
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+    
     public User() {}
     
-    public User(String username, String password, String email) {
-    	this.username = username;
-    	this.password = password;
-    	this.email = email;
-    }
-
     public Long getUserId() {
-	return userId;
+		return userId;
     }
 
     public void setUserId(Long userId) {
-	this.userId = userId;
+		this.userId = userId;
     }
 
     public String getUsername() {
@@ -31,11 +39,11 @@ public class User {
     }
     
     public String getPassword() {
-	return password;
+		return password;
     }
 
     public void setPassword(String password) {
-	this.password = password;
+		this.password = password;
     }
 
 	public String getEmail() {
@@ -45,5 +53,6 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+    
     
 }
