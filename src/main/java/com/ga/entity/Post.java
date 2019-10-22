@@ -5,6 +5,21 @@ import javax.persistence.*;
 @Entity
 @Table(name="posts")
 public class Post {
+	
+	@ManyToOne(cascade = {CascadeType.DETACH,
+			CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
+	
+	public User getUser() {
+		return user;
+	}
+	
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	
 
 	@Id
 	@Column(name = "post_id")
