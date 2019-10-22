@@ -9,17 +9,20 @@ public class Post {
 	@ManyToOne(cascade = {CascadeType.DETACH,
 			CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name = "user_id", nullable = false)
+	private Post post;
+	
+	/* ??? Refactor ???
 	private User user;
+	private Long userId;
 	
-	public User getUser() {
-		return user;
+	public Long getUserId() {
+		return user.getUserId();
 	}
 	
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
-	
-	
+	*/
 
 	@Id
 	@Column(name = "post_id")
