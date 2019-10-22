@@ -17,8 +17,19 @@ public class PostDaoImpl implements PostDao {
 	
 	@Override
 	public List<Post> listPosts() {
-		// TODO - return list of all posts
-		return null;
+		List<Post> allPosts = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			
+			allPosts = session.createQuery("FROM Post").getResultList();
+		} finally {
+			session.close();
+		}
+		
+		return allPosts;
 	}
 	
 	@Override
@@ -41,5 +52,37 @@ public class PostDaoImpl implements PostDao {
 		}
 		
 		return savedPost;
+	}
+	
+	@Override
+	public Post createPost(Post post) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			session.save(post);
+			session.getTransaction().commit();
+		} finally {
+			session.close();
+		}
+		return post;
+	}
+	
+	@Override
+	public Long deletePost(Long postId) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		Post savedPost = null;
+		
+		try {
+			session.beginTransaction();
+			savedPost = session.get(Post.class, postId);
+			session.delete(savedPost);
+			
+			session.getTransaction().commit();
+		} finally {
+			session.close();
+		}
+		return savedPost.getPostId();
 	}
 }

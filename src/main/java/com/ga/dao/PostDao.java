@@ -8,4 +8,6 @@ public interface PostDao {
 
 	public List<Post> listPosts();
 	public Post updatePost(Post post, Long postId);
+	public Post createPost(Post post);
+	public Long deletePost(Long postId);
 }
