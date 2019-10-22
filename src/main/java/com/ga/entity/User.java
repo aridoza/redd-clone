@@ -1,10 +1,23 @@
 package com.ga.entity;
 
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="users")
 public class User {
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Post> posts;
+	
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+	
+	public List<Post> getPosts() {
+		return posts;
+	}
 
     @Id
     @Column(name = "user_id")
