@@ -58,9 +58,9 @@ public class PostController {
 		return postService.updatePost(post, postId);
 	}
 	
-	@PostMapping("")
-	public Post createPost(@RequestBody Post post) {
-		return postService.createPost(post);
+	@PostMapping("/{username}")
+	public Post createPost(@RequestBody Post post, @PathVariable String username) {
+		return postService.createPost(post, username);
 	}
 	
 	@DeleteMapping("/{postId}")

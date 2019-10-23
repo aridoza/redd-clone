@@ -30,12 +30,8 @@ public class PostServiceImpl implements PostService {
 	}
 	
 	@Override
-	public Post createPost(Post post) {
-		User user = null;
-		user.setUsername("mucus");
-		user.setPassword("brains");
-		user.setEmail("mucusmail@mucus.com");
-		user.setUserId(1L);
+	public Post createPost(Post post, String username) {
+		User user = userDao.getUserByUsername(username);
 		post.setUser(user);
 		return postDao.createPost(post);
 	}

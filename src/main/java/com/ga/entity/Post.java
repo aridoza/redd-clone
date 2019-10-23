@@ -16,7 +16,7 @@ public class Post {
 	private Long postId;
 	
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-	@JsonIgnore
+//	@JsonIgnore
 	private List<Comment> comments;
 	
 	@ManyToOne(
