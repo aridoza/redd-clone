@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ga.entity.Post;
+import com.ga.entity.User;
 
 @Repository
 public class PostDaoImpl implements PostDao {

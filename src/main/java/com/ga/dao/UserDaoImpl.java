@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ga.entity.User;
+import com.ga.exception.EntityNotFoundException;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -48,6 +49,7 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
+//	public User login(User user) throws EntityNotFoundException {
 	public User login(User user) {
 		User savedUser = null;
 		
@@ -58,6 +60,8 @@ public class UserDaoImpl implements UserDao {
 			
 			savedUser = (User)session.createQuery("FROM User u WHERE u.username = '" + 
 					user.getUsername() + "'").getSingleResult();
+		} catch (Exception e) {
+//			throw new EntityNotFoundException("User not found");
 		} finally {
 			session.close();
 		}
@@ -96,6 +100,24 @@ public class UserDaoImpl implements UserDao {
 			
 			user = (User)session.createQuery("FROM User u WHERE u.username = '" + 
 				username + "'").uniqueResult();
+		} finally {
+			session.close();
+		}
+		
+		return user;
+	}
+	
+	@Override
+	public User getUserByUserId(Long userId) {
+		User user = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			
+			user = (User)session.createQuery("FROM User u WHERE u.user_id = '" + 
+				userId + "'").uniqueResult();
 		} finally {
 			session.close();
 		}

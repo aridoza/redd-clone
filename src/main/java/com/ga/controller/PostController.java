@@ -58,7 +58,7 @@ public class PostController {
 		return postService.updatePost(post, postId);
 	}
 	
-	@PostMapping("/")
+	@PostMapping("")
 	public Post createPost(@RequestBody Post post) {
 		return postService.createPost(post);
 	}
