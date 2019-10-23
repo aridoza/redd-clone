@@ -6,6 +6,10 @@ import javax.persistence.*;
 @Table(name = "comments")
 public class Comment {
 	
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name = "post_id", nullable = false)
+	private Post post;
+	
 	@Id
 	@Column(name = "comment_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +34,14 @@ public class Comment {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
 	}
 	
 	
