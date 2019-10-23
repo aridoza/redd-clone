@@ -44,4 +44,21 @@ public class CommentDaoImpl implements CommentDao {
 		return comment;
 	}
 
+	@Override
+	public Long deleteComment(Long commentId) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		Comment savedComment = null;
+		
+		try {
+			session.beginTransaction();
+			savedComment = session.get(Comment.class, commentId);
+			session.delete(savedComment);
+			session.getTransaction().commit();
+		} finally {
+			session.close();
+		}
+		return savedComment.getCommentId();
+	}
+
 }

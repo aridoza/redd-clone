@@ -23,5 +23,10 @@ public class CommentServiceImpl implements CommentService {
 	public Comment createComment(Comment comment) {
 		return commentDao.createComment(comment);
 	}
+
+	@Override
+	public Long deleteComment(Long commentId) {
+		return commentDao.deleteComment(commentId);
+	}
 	
 }
