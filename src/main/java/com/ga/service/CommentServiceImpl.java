@@ -19,5 +19,9 @@ public class CommentServiceImpl implements CommentService {
 		return commentDao.listComments();
 	}
 
+	@Override
+	public Comment createComment(Comment comment) {
+		return commentDao.createComment(comment);
+	}
 	
 }

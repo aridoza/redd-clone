@@ -30,4 +30,18 @@ public class CommentDaoImpl implements CommentDao {
 		return allComments;
 	}
 
+	@Override
+	public Comment createComment(Comment comment) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			session.save(comment);
+			session.getTransaction().commit();
+		} finally {
+			session.close();
+		}
+		return comment;
+	}
+
 }
