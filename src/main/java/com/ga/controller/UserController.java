@@ -2,7 +2,10 @@ package com.ga.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ga.entity.JwtResponse;
 import com.ga.entity.User;
+import com.ga.exception.EntityNotFoundException;
+import com.ga.exception.LoginException;
 import com.ga.service.UserService;
 
 @RestController
@@ -33,14 +39,15 @@ public class UserController {
 	}
 	
 	@PostMapping("/signup")
-	public User signup(@RequestBody User user) {
-		return userService.signup(user);
+	public ResponseEntity<?> signup(@Valid @RequestBody User user) {
+    	return ResponseEntity.ok(new JwtResponse(userService.signup(user)));
 	}
 	
 	@PostMapping("/login")
-	public Long login(@RequestBody User user) {
-		return userService.login(user);
-	}
+//	public ResponseEntity<?> login(@RequestBody User user) throws LoginException, EntityNotFoundException {
+	public ResponseEntity<?> login(@RequestBody User user) {
+        return ResponseEntity.ok(new JwtResponse(userService.login(user)));
+    }
 	
 	@DeleteMapping("/{userId}")
 	public Long deleteUser(@PathVariable Long userId) {

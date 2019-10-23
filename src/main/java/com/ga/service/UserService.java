@@ -2,15 +2,21 @@ package com.ga.service;
 
 import java.util.List;
 
-import com.ga.entity.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+import com.ga.entity.User;
+import com.ga.exception.EntityNotFoundException;
+import com.ga.exception.LoginException;
+
+public interface UserService extends UserDetailsService {
 
 	public List<User> listUsers();
 	
-	public User signup(User user);
+	public String signup(User user);
 	
-	public Long login(User user);
+//	public String login(User user) throws LoginException, EntityNotFoundException;
+	
+	public String login(User user);
 	
 	public Long deleteUser(Long userId);
 		

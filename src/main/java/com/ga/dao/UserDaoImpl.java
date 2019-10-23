@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ga.entity.User;
+import com.ga.exception.EntityNotFoundException;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -48,6 +49,7 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
+//	public User login(User user) throws EntityNotFoundException {
 	public User login(User user) {
 		User savedUser = null;
 		
@@ -57,8 +59,9 @@ public class UserDaoImpl implements UserDao {
 			session.beginTransaction();
 			
 			savedUser = (User)session.createQuery("FROM User u WHERE u.username = '" + 
-					user.getUsername() + "' AND u.password = '" + 
-					user.getPassword() + "'").getSingleResult();
+					user.getUsername() + "'").getSingleResult();
+		} catch (Exception e) {
+//			throw new EntityNotFoundException("User not found");
 		} finally {
 			session.close();
 		}
@@ -84,5 +87,41 @@ public class UserDaoImpl implements UserDao {
 		}
 		
 		return savedUser.getUserId();
+	}
+	
+	@Override
+	public User getUserByUsername(String username) {
+		User user = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			
+			user = (User)session.createQuery("FROM User u WHERE u.username = '" + 
+				username + "'").uniqueResult();
+		} finally {
+			session.close();
+		}
+		
+		return user;
+	}
+	
+	@Override
+	public User getUserByUserId(Long userId) {
+		User user = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			
+			user = (User)session.createQuery("FROM User u WHERE u.user_id = '" + 
+				userId + "'").uniqueResult();
+		} finally {
+			session.close();
+		}
+		
+		return user;
 	}
 }
