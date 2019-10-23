@@ -15,7 +15,8 @@ public class Post {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long postId;
 	
-	@OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<Comment> comments;
 	
 	@ManyToOne(
@@ -24,7 +25,6 @@ public class Post {
 					CascadeType.MERGE, 
 					CascadeType.REFRESH
 			})
-//	@JsonIgnore
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 	
