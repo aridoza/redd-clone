@@ -29,10 +29,10 @@ public class CommentController {
 	}
 	
 
-	@PostMapping("")
-	public Comment createComment(@RequestBody Comment comment) {
+	@PostMapping("/{postId}")
+	public Comment createComment(@RequestBody Comment comment, @PathVariable Long postId) {
 		//TODO: refactor for postId after Join
-		return commentService.createComment(comment);
+		return commentService.createComment(comment, postId);
 	}
 	
 	@DeleteMapping("/{commentId}")

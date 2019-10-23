@@ -86,4 +86,22 @@ public class PostDaoImpl implements PostDao {
 		}
 		return savedPost.getPostId();
 	}
+
+	@Override
+	public Post getPostByPostId(Long postId) {
+		Post post = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			
+			post = (Post)session.createQuery("FROM Post p WHERE p.postId = '" + postId + "'").uniqueResult();
+		} finally {
+			session.close();
+		}
+		return post;
+	}
+	
+	
 }
