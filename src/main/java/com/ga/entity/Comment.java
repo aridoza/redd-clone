@@ -10,8 +10,6 @@ public class Comment {
 	@Column(name = "comment_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long commentId;
-	
-	
 
 	@Column
 	private String text;

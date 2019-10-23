@@ -5,9 +5,11 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.ga.entity.Comment;
 
+@Repository
 public class CommentDaoImpl implements CommentDao {
 	
 	@Autowired
@@ -21,7 +23,7 @@ public class CommentDaoImpl implements CommentDao {
 		
 		try {
 			session.beginTransaction();
-			allComments = session.createQuery("FROM Comments").getResultList();
+			allComments = session.createQuery("FROM Comment").getResultList();
 		} finally {
 			session.close();
 		}
