@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.ga.entity.Comment;
 import com.ga.entity.Post;
 import com.ga.entity.User;
 
@@ -101,6 +102,21 @@ public class PostDaoImpl implements PostDao {
 			session.close();
 		}
 		return post;
+	}
+
+	@Override
+	public List<Post> listPostsByUsername(User user) {
+		List<Post> userPosts = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			userPosts = session.createQuery("FROM Post WHERE user_id = '" + user.getUserId() + "'").getResultList();
+		} finally {
+			session.close();
+		}
+		return userPosts;
 	}
 	
 	
