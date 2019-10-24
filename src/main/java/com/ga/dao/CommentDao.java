@@ -11,5 +11,6 @@ public interface CommentDao {
 	public Comment createComment(Comment comment);
 	public Long deleteComment(Long commentId);
 	List<Comment> listCommentsByUser(User user);
+	public List<Comment> getCommentsByPostId(Long postId);
 	
 }
