@@ -106,7 +106,7 @@ public class UserDaoImpl implements UserDao {
 		
 		return user;
 	}
-	
+
 	@Override
 	public User getUserByUserId(Long userId) {
 		User user = null;
@@ -124,4 +124,5 @@ public class UserDaoImpl implements UserDao {
 		
 		return user;
 	}
+
 }
