@@ -34,7 +34,8 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public Comment createComment(Comment comment, Long postId, String username) {
+	public Comment createComment(Comment comment, Long postId, String token) {
+		String username = jwtUtil.getUsernameFromToken(token);
 		User user = userDao.getUserByUsername(username);
 		Post post = postDao.getPostByPostId(postId);
 		comment.setUser(user);
