@@ -9,4 +9,5 @@ public interface CommentService {
 	public List<Comment> listComments();
 	public Comment createComment(Comment comment, Long postId, String username);
 	public Long deleteComment(Long commentId);
+	public List<Comment> getCommentsByPostId(Long postId);
 }

@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ga.entity.Comment;
 import com.ga.entity.Post;
 import com.ga.entity.User;
+import com.ga.service.CommentService;
 import com.ga.service.PostService;
 import com.ga.service.UserService;
 
@@ -30,14 +32,17 @@ public class PostController {
 	@Autowired
 	PostService postService;
 	
-	@PostConstruct
-	public void initializePosts() {
-		posts = new ArrayList<Post>();
-		
-		posts.add(new Post("hello", "this is the first post"));
-		posts.add(new Post("good day", "this is the second post"));
-		
-	}
+	@Autowired
+	CommentService commentService;
+	
+//	@PostConstruct
+//	public void initializePosts() {
+//		posts = new ArrayList<Post>();
+//		
+//		posts.add(new Post("hello", "this is the first post"));
+//		posts.add(new Post("good day", "this is the second post"));
+//		
+//	}
 	
 	
 	// Public
@@ -72,5 +77,12 @@ public class PostController {
 	@PreAuthorize("isAuthenticated()")
 	public Long deletePost(@PathVariable Long postId) {
 		return postService.deletePost(postId);
+	}
+	
+	// Authenticated
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/{postId}/comment")
+	public List<Comment> getCommentsByPostId(@PathVariable Long postId) {
+		return commentService.getCommentsByPostId(postId);
 	}
 }

@@ -29,6 +29,22 @@ public class CommentDaoImpl implements CommentDao {
 		}
 		return allComments;
 	}
+	
+	@Override
+	public List<Comment> getCommentsByPostId(Long postId) {
+		List<Comment> postComments = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			postComments = session.createQuery("FROM Comment WHERE post_id = '" + postId + "'").getResultList();
+		} finally {
+			session.close();
+		}
+		
+		return postComments;
+	}
 
 	@Override
 	public Comment createComment(Comment comment) {
