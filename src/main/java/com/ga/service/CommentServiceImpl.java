@@ -48,6 +48,11 @@ public class CommentServiceImpl implements CommentService {
 	public Long deleteComment(Long commentId) {
 		return commentDao.deleteComment(commentId);
 	}
+
+	@Override
+	public List<Comment> getCommentsByPostId(Long postId) {
+		return commentDao.getCommentsByPostId(postId);
+	}
 	
 	@Override
 	public List<Comment> listCommentsByUsername(String token) {
