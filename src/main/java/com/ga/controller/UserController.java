@@ -75,4 +75,11 @@ public class UserController {
 		return userService.deleteUser(userId);
 	}
 	
+	// Authenticated
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/post")
+	public List<User> listUser() {
+		return userService.listUsers();
+	}
+	
 }
