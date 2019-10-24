@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ga.config.JwtUtil;
 import com.ga.dao.CommentDao;
 import com.ga.dao.PostDao;
 import com.ga.dao.UserDao;
@@ -23,6 +24,9 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Autowired
 	UserDao userDao;
+	
+	@Autowired
+	JwtUtil jwtUtil;
 
 	@Override
 	public List<Comment> listComments() {
@@ -42,6 +46,14 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public Long deleteComment(Long commentId) {
 		return commentDao.deleteComment(commentId);
+	}
+	
+	@Override
+	public List<Comment> listCommentsByUsername(String token) {
+		String username = jwtUtil.getUsernameFromToken(token);
+		User user = userDao.getUserByUsername(username);
+		
+		return commentDao.listCommentsByUser(user);
 	}
 	
 }
