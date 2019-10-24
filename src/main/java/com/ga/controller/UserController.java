@@ -44,7 +44,12 @@ public class UserController {
 	
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@Valid @RequestBody User user) {
-    	return ResponseEntity.ok(new JwtResponse(userService.signup(user)));
+		Map<String, String> data = new HashMap<>();
+		
+		data.put("token", new JwtResponse(userService.signup(user)).getToken());
+		data.put("username", userService.loadUserByUsername(user.getUsername()).getUsername());
+		
+        return ResponseEntity.ok(data);
 	}
 	
 	@PostMapping("/login")
@@ -54,7 +59,7 @@ public class UserController {
 		
 		Map<String, String> data = new HashMap<>();
 		
-		data.put("token", token.getToken());
+		data.put("token", new JwtResponse(userService.signup(user)).getToken());
 		data.put("username", userService.loadUserByUsername(user.getUsername()).getUsername());
 		
         return ResponseEntity.ok(data);
