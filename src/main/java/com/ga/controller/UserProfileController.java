@@ -18,11 +18,13 @@ public class UserProfileController {
     @Autowired
     UserProfileService userProfileService;
 	
+    // Authenticated
     @GetMapping("/{username}")
     public UserProfile getUserProfile(@PathVariable String username) {
         return userProfileService.getUserProfile(username);
     }
     
+    // Authenticated
     @PostMapping("/{username}")
     public UserProfile createUserProfile(@PathVariable String username, @RequestBody UserProfile userProfile) {
         return userProfileService.createUserProfile(username, userProfile);

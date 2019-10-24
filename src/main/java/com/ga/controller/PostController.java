@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +40,7 @@ public class PostController {
 	}
 	
 	
-
+	// Public
 	@GetMapping("/posts")
 	public List<Post> getPosts(){
 		return postService.listPosts();
@@ -53,17 +54,22 @@ public class PostController {
 //		return foundPost;
 //	}
 	
+	// Authenticated
 	@PutMapping("/{postId}")
 	public Post updatePost(@RequestBody Post post, @PathVariable Long postId) {
 		return postService.updatePost(post, postId);
 	}
 	
+	// Authenticated
+	@PreAuthorize("isAuthenticated()")  
 	@PostMapping("/{username}")
 	public Post createPost(@RequestBody Post post, @PathVariable String username) {
 		return postService.createPost(post, username);
 	}
 	
+	// Authenticated
 	@DeleteMapping("/{postId}")
+	@PreAuthorize("isAuthenticated()")
 	public Long deletePost(@PathVariable Long postId) {
 		return postService.deletePost(postId);
 	}
