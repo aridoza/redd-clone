@@ -10,4 +10,5 @@ public interface PostDao {
 	public Post updatePost(Post post, Long postId);
 	public Post createPost(Post post);
 	public Long deletePost(Long postId);
+	public Post getPostByPostId(Long postId);
 }

@@ -1,5 +1,7 @@
 package com.ga.entity;
 
+import java.util.List;
+
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,13 +15,16 @@ public class Post {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long postId;
 	
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<Comment> comments;
+	
 	@ManyToOne(
 			cascade = {
 					CascadeType.DETACH,
 					CascadeType.MERGE, 
 					CascadeType.REFRESH
 			})
-//	@JsonIgnore
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 	
@@ -68,5 +73,14 @@ public class Post {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+	
 	
 }

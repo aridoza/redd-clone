@@ -45,8 +45,10 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+	//public String login(User user) throws LoginException, EntityNotFoundException {
+	
 	@Override
-	public String login(User user) throws LoginException, EntityNotFoundException {
+	public String login(User user) {
 		User foundUser = userDao.login(user);
 		if (foundUser != null && foundUser.getUserId() != null
 				&& bCryptPasswordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
@@ -54,8 +56,8 @@ public class UserServiceImpl implements UserService {
 
 			return jwtUtil.generateToken(userDetails);
 		}
-		throw new LoginException("Username or password incorrect.");
-//		return null;
+		//throw new LoginException("Username or password incorrect.");
+		return null;
 	}
 
 	@Override

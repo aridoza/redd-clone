@@ -8,6 +8,6 @@ public interface PostService {
 	
 	public List<Post> listPosts();
 	public Post updatePost(Post post, Long postId);
-	public Post createPost(Post post);
+	public Post createPost(Post post, String username);
 	public Long deletePost(Long postId);
 }
