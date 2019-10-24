@@ -17,10 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ga.config.JwtUtil;
+import com.ga.entity.Comment;
 import com.ga.entity.JwtResponse;
 import com.ga.entity.User;
 import com.ga.exception.EntityNotFoundException;
 import com.ga.exception.LoginException;
+import com.ga.service.CommentService;
 import com.ga.service.UserService;
 
 import antlr.Token;
@@ -31,6 +34,12 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	CommentService commentService;
+	
+	@Autowired
+	JwtUtil jwtUtil;
 	
 	// Test route for sanity checking
 	@GetMapping("/hello")
@@ -73,6 +82,13 @@ public class UserController {
 	@DeleteMapping("/{userId}")
 	public Long deleteUser(@PathVariable Long userId) {
 		return userService.deleteUser(userId);
+	}
+	
+	// Authenticated
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/comment")
+	public List<Comment> getCommentsByUser() {
+		return commentService.listCommentsByUser();
 	}
 	
 }

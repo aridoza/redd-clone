@@ -3,8 +3,11 @@ package com.ga.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.ga.config.JwtUtil;
 import com.ga.dao.CommentDao;
 import com.ga.dao.PostDao;
 import com.ga.dao.UserDao;
@@ -23,6 +26,8 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Autowired
 	UserDao userDao;
+	
+	private JwtUtil jwtUtil;
 
 	@Override
 	public List<Comment> listComments() {
@@ -42,6 +47,20 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public Long deleteComment(Long commentId) {
 		return commentDao.deleteComment(commentId);
+	}
+
+	 
+	@Override
+	public List<Comment> listCommentsByUser() {
+		//UserDetails userDetails = loadUserByUsername(user.getUsername());
+		
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		String username = ((UserDetails)principal).getUsername();
+		
+		//String username = "superman";
+		
+		return commentDao.listCommentsByUser(username);
 	}
 	
 }

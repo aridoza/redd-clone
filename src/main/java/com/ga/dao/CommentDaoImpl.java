@@ -13,6 +13,9 @@ import com.ga.entity.Comment;
 public class CommentDaoImpl implements CommentDao {
 	
 	@Autowired
+	UserDao userDao;
+	
+	@Autowired
 	private SessionFactory sessionFactory;
 
 	@Override
@@ -59,6 +62,24 @@ public class CommentDaoImpl implements CommentDao {
 			session.close();
 		}
 		return savedComment.getCommentId();
+	}
+
+	@Override
+	public List<Comment> listCommentsByUser(String username) {
+		List<Comment> userComments = null;
+		
+		Long userId = userDao.getUserByUsername(username).getUserId();
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			userComments = session.createQuery("FROM Comment c WHERE c.user_id = '" + 
+			userId + "'").getResultList();
+		} finally {
+			session.close();
+		}
+		return userComments;
 	}
 
 }
