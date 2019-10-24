@@ -79,6 +79,17 @@ public class UserServiceImpl implements UserService {
 		return new org.springframework.security.core.userdetails.User(user.getUsername(),
 				bCryptPasswordEncoder.encode(user.getPassword()), true, true, true, true, getGrantedAuthorities(user));
 	}
+	
+	@Override
+	public UserDetails loadUserByEmail(String email) {
+		User user = userDao.getUserByEmail(email);
+
+		if (user == null)
+			throw new UsernameNotFoundException("Unkknown user: " + email);
+
+		return new org.springframework.security.core.userdetails.User(user.getUsername(),
+				bCryptPasswordEncoder.encode(user.getPassword()), true, true, true, true, getGrantedAuthorities(user));
+	}
 
 	private List<GrantedAuthority> getGrantedAuthorities(User user) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
