@@ -18,6 +18,10 @@ public class User {
 	@JsonIgnore
 	private List<Post> posts;
 	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<Comment> comments;
+	
 	public void setPosts(List<Post> posts) {
 		this.posts = posts;
 	}
@@ -75,6 +79,14 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
     
     

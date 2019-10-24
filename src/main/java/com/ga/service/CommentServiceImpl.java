@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.ga.dao.CommentDao;
 import com.ga.dao.PostDao;
+import com.ga.dao.UserDao;
 import com.ga.entity.Comment;
 import com.ga.entity.Post;
+import com.ga.entity.User;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -18,6 +20,9 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Autowired
 	PostDao postDao;
+	
+	@Autowired
+	UserDao userDao;
 
 	@Override
 	public List<Comment> listComments() {
@@ -25,8 +30,10 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public Comment createComment(Comment comment, Long postId) {
+	public Comment createComment(Comment comment, Long postId, String username) {
+		User user = userDao.getUserByUsername(username);
 		Post post = postDao.getPostByPostId(postId);
+		comment.setUser(user);
 		comment.setPost(post);
 		
 		return commentDao.createComment(comment);
