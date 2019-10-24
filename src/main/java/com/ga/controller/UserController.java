@@ -57,7 +57,7 @@ public class UserController {
 	public ResponseEntity<?> login(@RequestBody User user) {
 		Map<String, String> data = new HashMap<>();
 		
-		data.put("token", new JwtResponse(userService.signup(user)).getToken());
+		data.put("token", new JwtResponse(userService.login(user)).getToken());
 		data.put("username", userService.loadUserByUsername(user.getUsername()).getUsername());
 		
         return ResponseEntity.ok(data);
