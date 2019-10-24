@@ -21,10 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ga.entity.Comment;
 import com.ga.entity.JwtResponse;
+import com.ga.entity.Post;
 import com.ga.entity.User;
 import com.ga.exception.EntityNotFoundException;
 import com.ga.exception.LoginException;
 import com.ga.service.CommentService;
+import com.ga.service.PostService;
 import com.ga.service.UserService;
 
 import antlr.Token;
@@ -38,6 +40,9 @@ public class UserController {
 	
 	@Autowired
 	CommentService commentService;
+	
+	@Autowired
+	PostService postService;
 	
 	// Test route for sanity checking
 	@GetMapping("/hello")
@@ -93,6 +98,15 @@ public class UserController {
 		return userService.deleteUser(userId);
 	}
 	
+	//Authenticated
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/post")
+	public List<Post> getPostsByUsername(@RequestHeader Map<String, String> headers) {
+		String jwtToken = headers.get("authorization").substring(7);
+		
+		List<Post> userPosts = postService.listPostsByUsername(jwtToken);
+		return userPosts;
+	}
 
 	//Authenticated
 	@PreAuthorize("isAuthenticated()")
@@ -102,7 +116,6 @@ public class UserController {
 		
 		List<Comment> userComments = commentService.listCommentsByUsername(jwtToken);
 		return userComments;
-
 	}
 	
 }
