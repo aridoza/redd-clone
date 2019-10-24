@@ -39,7 +39,7 @@ public class CommentDaoImpl implements CommentDao {
 		
 		try {
 			session.beginTransaction();
-			userComments = session.createQuery("FROM Comment WHERE user_id = '" + user.getUserId() + "'").getResultList();
+			userComments = session.createQuery("FROM Comment WHERE user_id = '" + user.getId() + "'").getResultList();
 		} finally {
 			session.close();
 		}
@@ -91,7 +91,7 @@ public class CommentDaoImpl implements CommentDao {
 		} finally {
 			session.close();
 		}
-		return savedComment.getCommentId();
+		return savedComment.getId();
 	}
 
 }

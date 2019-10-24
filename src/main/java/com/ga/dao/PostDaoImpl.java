@@ -85,7 +85,7 @@ public class PostDaoImpl implements PostDao {
 		} finally {
 			session.close();
 		}
-		return savedPost.getPostId();
+		return savedPost.getId();
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class PostDaoImpl implements PostDao {
 		
 		try {
 			session.beginTransaction();
-			userPosts = session.createQuery("FROM Post WHERE user_id = '" + user.getUserId() + "'").getResultList();
+			userPosts = session.createQuery("FROM Post WHERE user_id = '" + user.getId() + "'").getResultList();
 		} finally {
 			session.close();
 		}
