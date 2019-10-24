@@ -82,7 +82,6 @@ public class PostController {
 	}
 	
 	// Authenticated
-	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/{postId}/comment")
 	public List<Comment> getCommentsByPostId(@PathVariable Long postId) {
 		return commentService.getCommentsByPostId(postId);
