@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 		User user = userDao.getUserByUsername(username);
 
 		if (user == null)
-			throw new UsernameNotFoundException("Unkknown user: " + username);
+			throw new UsernameNotFoundException("Unknown user: " + username);
 
 		return new org.springframework.security.core.userdetails.User(user.getUsername(),
 				bCryptPasswordEncoder.encode(user.getPassword()), true, true, true, true, getGrantedAuthorities(user));
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
 		User user = userDao.getUserByEmail(email);
 
 		if (user == null)
-			throw new UsernameNotFoundException("Unkknown user: " + email);
+			throw new UsernameNotFoundException("Unknown user: " + email);
 
 		return new org.springframework.security.core.userdetails.User(user.getUsername(),
 				bCryptPasswordEncoder.encode(user.getPassword()), true, true, true, true, getGrantedAuthorities(user));

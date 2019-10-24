@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,11 +38,14 @@ public class UserController {
 		return "Hello World!!";
 	}
 	
+	// Authenticated
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/list")
 	public List<User> listUsers() {
 		return userService.listUsers();
 	}
 	
+	// Public
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@Valid @RequestBody User user) {
 		Map<String, String> data = new HashMap<>();
@@ -52,6 +56,7 @@ public class UserController {
         return ResponseEntity.ok(data);
 	}
 	
+	// Public
 	@PostMapping("/login")
 //	public ResponseEntity<?> login(@RequestBody User user) throws LoginException, EntityNotFoundException {
 	public ResponseEntity<?> login(@RequestBody User user) {
@@ -63,6 +68,8 @@ public class UserController {
         return ResponseEntity.ok(data);
     }
 	
+	// Authenticated
+	@PreAuthorize("isAuthenticated()")
 	@DeleteMapping("/{userId}")
 	public Long deleteUser(@PathVariable Long userId) {
 		return userService.deleteUser(userId);
