@@ -21,4 +21,6 @@ public interface UserDao {
 
 	public User getUserByUserId(Long userId);
 	
+	public User getUserByEmail(String userEmail);
+	
 }

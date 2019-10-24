@@ -58,8 +58,8 @@ public class UserDaoImpl implements UserDao {
 		try {
 			session.beginTransaction();
 			
-			savedUser = (User)session.createQuery("FROM User u WHERE u.username = '" + 
-					user.getUsername() + "'").getSingleResult();
+			savedUser = (User)session.createQuery("FROM User u WHERE u.email = '" + 
+					user.getEmail() + "'").getSingleResult();
 		} catch (Exception e) {
 //			throw new EntityNotFoundException("User not found");
 		} finally {
@@ -122,6 +122,23 @@ public class UserDaoImpl implements UserDao {
 			session.close();
 		}
 		
+		return user;
+	}
+
+	@Override
+	public User getUserByEmail(String userEmail) {
+		User user = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			
+			user = (User)session.createQuery("FROM User u WHERE u.email = '" +
+					userEmail + "'").uniqueResult();
+		} finally {
+			session.close();
+		}
 		return user;
 	}
 

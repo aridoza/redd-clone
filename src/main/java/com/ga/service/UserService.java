@@ -2,6 +2,7 @@ package com.ga.service;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.ga.entity.User;
@@ -19,5 +20,7 @@ public interface UserService extends UserDetailsService {
 	public String login(User user);
 	
 	public Long deleteUser(Long userId);
+
+	UserDetails loadUserByEmail(String email);
 		
 }
