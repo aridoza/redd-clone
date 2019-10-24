@@ -1,6 +1,8 @@
 package com.ga.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -19,6 +21,8 @@ import com.ga.entity.User;
 import com.ga.exception.EntityNotFoundException;
 import com.ga.exception.LoginException;
 import com.ga.service.UserService;
+
+import antlr.Token;
 
 @RestController
 @RequestMapping("/user")
@@ -40,13 +44,23 @@ public class UserController {
 	
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@Valid @RequestBody User user) {
-    	return ResponseEntity.ok(new JwtResponse(userService.signup(user)));
+		Map<String, String> data = new HashMap<>();
+		
+		data.put("token", new JwtResponse(userService.signup(user)).getToken());
+		data.put("username", userService.loadUserByUsername(user.getUsername()).getUsername());
+		
+        return ResponseEntity.ok(data);
 	}
 	
 	@PostMapping("/login")
 //	public ResponseEntity<?> login(@RequestBody User user) throws LoginException, EntityNotFoundException {
 	public ResponseEntity<?> login(@RequestBody User user) {
-        return ResponseEntity.ok(new JwtResponse(userService.login(user)));
+		Map<String, String> data = new HashMap<>();
+		
+		data.put("token", new JwtResponse(userService.signup(user)).getToken());
+		data.put("username", userService.loadUserByUsername(user.getUsername()).getUsername());
+		
+        return ResponseEntity.ok(data);
     }
 	
 	@DeleteMapping("/{userId}")
