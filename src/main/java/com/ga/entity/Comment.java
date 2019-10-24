@@ -24,11 +24,11 @@ public class Comment {
 	
 	public Comment() {}
 
-	public Long getCommentId() {
+	public Long getId() {
 		return commentId;
 	}
 
-	public void setCommentId(Long commentId) {
+	public void setId(Long commentId) {
 		this.commentId = commentId;
 	}
 

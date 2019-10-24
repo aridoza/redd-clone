@@ -86,7 +86,7 @@ public class UserDaoImpl implements UserDao {
 			session.close();
 		}
 		
-		return savedUser.getUserId();
+		return savedUser.getId();
 	}
 	
 	@Override

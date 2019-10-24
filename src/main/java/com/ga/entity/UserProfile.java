@@ -27,11 +27,11 @@ public class UserProfile {
 
 	public UserProfile() {}
 	
-	public Long getProfileId() {
+	public Long getId() {
 		return profileId;
 	}
 
-	public void setProfileId(Long profileId) {
+	public void setId(Long profileId) {
 		this.profileId = profileId;
 	}
 

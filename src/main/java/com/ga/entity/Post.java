@@ -50,11 +50,11 @@ public class Post {
     	this.description = description;
     }
 
-	public Long getPostId() {
+	public Long getId() {
 		return postId;
 	}
 
-	public void setPostId(Long postId) {
+	public void setId(Long postId) {
 		this.postId = postId;
 	}
 
