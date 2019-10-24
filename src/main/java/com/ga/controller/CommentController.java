@@ -1,6 +1,7 @@
 package com.ga.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,9 +34,15 @@ public class CommentController {
 	
 	// Authenticated
 	@PreAuthorize("isAuthenticated()")
-	@PostMapping("/{username}/{postId}")
-	public Comment createComment(@RequestBody Comment comment, @PathVariable Long postId, @PathVariable String username) {
-		return commentService.createComment(comment, postId, username);
+//	@PostMapping("/{username}/{postId}")
+	@PostMapping("/{postId}")
+	public Comment createComment(
+			@RequestBody Comment comment, 
+			@PathVariable Long postId, 
+			@RequestHeader Map<String, String> headers) {
+		String jwtToken = headers.get("authorization").substring(7);
+		
+		return commentService.createComment(comment, postId, jwtToken);
 	}
 	
 	// Authenticated

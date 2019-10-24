@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ga.entity.Comment;
+import com.ga.entity.User;
 
 @Repository
 public class CommentDaoImpl implements CommentDao {
@@ -28,6 +29,22 @@ public class CommentDaoImpl implements CommentDao {
 			session.close();
 		}
 		return allComments;
+	}
+	
+	@Override
+	public List<Comment> listCommentsByUser(User user) {
+		List<Comment> userComments = null;
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		try {
+			session.beginTransaction();
+			userComments = session.createQuery("FROM Comment WHERE user_id = '" + user.getUserId() + "'").getResultList();
+		} finally {
+			session.close();
+		}
+		
+		return userComments;
 	}
 
 	@Override
