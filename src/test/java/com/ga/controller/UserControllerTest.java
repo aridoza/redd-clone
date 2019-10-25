@@ -1,17 +1,21 @@
 package com.ga.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -20,10 +24,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.ga.service.UserService;
 
-
-@RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
 
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+    
+	
 	private MockMvc mockMvc;
 
 	@InjectMocks
@@ -31,6 +37,9 @@ public class UserControllerTest {
 	
 	@Mock
 	UserService userService;
+	
+	@Mock
+	User user;
 
 	@Before
 	public void init() {
@@ -55,10 +64,12 @@ public class UserControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(createUserInJsonAllFields("testuser", "testpass", "test@testmail.com"));
 		
-		System.out.println("signupUserSuccess createUserInJsonAllFields: " + 
-			createUserInJsonAllFields("testuser", "testpass", "test@testmail.com"));
-		
-		when(userService.signup(any())).thenReturn("testToken123456", "testuser");
+		when(userService
+			.signup(any()))
+			.thenReturn("testToken123456", "testuser");
+		when(userService
+			.loadUserByUsername(anyString()).getUsername())
+			.thenReturn("testuser");
 		
 		MvcResult result = mockMvc.perform(requestBuilder)
 			.andExpect(status().isOk())
@@ -69,20 +80,44 @@ public class UserControllerTest {
 	}
 	
 	@Test
-	public void login_User_Success() throws Exception{
+	public void login_User_Success() throws Exception {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 			       .post("/user/login")
 			       .contentType(MediaType.APPLICATION_JSON)
 			       .content(createUserInJsonUsingEmail("test@testmail.com", "testpass"));
 		
-		when(userService.login(any())).thenReturn("testToken123456");
+		when(userService
+			.login(any()))
+			.thenReturn("testToken123456", "testuser");
+		when(userService
+			.loadUserByEmail(anyString()).getUsername())
+			.thenReturn("testuser");
 		
 		MvcResult result = mockMvc.perform(requestBuilder)
-          .andExpect(status().isOk())
-          .andExpect(content().json("{\"token\":\"testToken123456\", \"username\":\"testuser\"}"))
-          .andReturn();
+			.andExpect(status().isOk())
+			.andExpect(content().json("{\"token\":\"testToken123456\",\"username\":\"testuser\"}"))
+			.andReturn();
 		
 		System.out.println(">>>>>>>>> signup User Success result: " + result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void delete_User_Success() throws Exception {
+		String tempUserId = "1";
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.delete("/user/{tempUserId}");
+		
+		when(userService
+				.deleteUser(anyLong()))
+				.thenReturn(1L);
+
+		MvcResult result = mockMvc.perform(requestBuilder)
+				.andExpect(status().isOk())
+				.andExpect(content().string("1"))
+				.andReturn();
+		
+		System.out.println(">>>>>>>>> delete User Success result: " + result.getResponse().getContentAsString());
 	}
 	
 	private static String createUserInJson(String username, String password) {
