@@ -2,6 +2,7 @@ package com.ga.controller;
 
 import org.junit.runner.RunWith;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.ga.entity.Post;
@@ -12,7 +13,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -40,12 +41,21 @@ public class PostControllerTest {
 	@InjectMocks
 	PostController postController;
 	
+	@InjectMocks
+	private Post post;
+	
 	@Mock
-	private PostService postService;
+	PostService postService;
 	
 	@Before
 	public void init() {
 		mockMvc = MockMvcBuilders.standaloneSetup(postController).build();
+	}
+	
+	@Before
+	public void initializeDummyPost() {
+		post.setTitle("first post");
+		post.setDescription("post description");
 	}
 	
 	@Test
@@ -58,7 +68,7 @@ public class PostControllerTest {
 		.andExpect(status().isOk())
 		.andExpect(content().string("Hello World!!"));
 	}
-	
+/*	
 //	@Test
 //	public void listPosts_Post_Success() throws Exception {
 //		RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -78,24 +88,62 @@ public class PostControllerTest {
 //	.andExpect(jsonPath("$[0].description", is("heres a post description")));
 	
 //	.andExpect(content().json("{\"title\":\"first post\"}"));
+ */
+	
+//	System.out.println(firstPost);
+//	
+//	when(postService.listPosts()).thenReturn(Arrays.asList(firstPost));
+//	Post firstPost = new Post();
+//	firstPost.setTitle("first post");
+//	firstPost.setDescription("heres a post description");
+	
+//	.andExpect(jsonPath("$.title", hasItem("new post")))
+//	.andExpect(jsonPath("$.description", hasItem("another comment")));
+//	@Test
+//	public void listPosts_Post_Success() throws Exception {
+//		
+//		//List<Post> allPosts;
+//		
+//		RequestBuilder requestBuilder = MockMvcRequestBuilders
+//				.get("/post/posts")
+//				.accept(MediaType.APPLICATION_JSON);
+//		
+//				
+//		
+//		mockMvc.perform(get("/post/posts").accept(MediaType.APPLICATION_JSON_UTF8))
+//			.andExpect(status().isOk())
+//			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+//			.andExpect(content().json("{\"$[0].title\":\"first post\"}"));
+//		
+//		verify(postService, times(1)).listPosts();
+//		verifyNoMoreInteractions(postService);
+//	}
+//	.andExpect(content().json("{\"title\":\"first post\"}"));
+	
+	
 	@Test
-	public void listPosts_Post_Success() throws Exception {
+	public void listPosts_Post_Success() throws Exception {		
 		Post firstPost = new Post();
-				firstPost.setTitle("first post");
-				firstPost.setDescription("heres a post description");
-				
-		System.out.println(firstPost);
+		firstPost.setTitle("first post");
+		firstPost.setDescription("heres a post description");
 		
-		when(postService.listPosts()).thenReturn(Arrays.asList(firstPost));
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/post/posts")
+				.contentType(MediaType.APPLICATION_JSON);
 		
-		mockMvc.perform(get("/post/posts"))
+		
+		mockMvc.perform(requestBuilder)	
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$[0].title", is("first post")));
-
-		
-		verify(postService, times(1)).listPosts();
-		verifyNoMoreInteractions(postService);
+			.andExpect(content().string(firstPost.getTitle()));
+			
 	}
+	
+	
+	private static String createPostInJson(String title, String description) {
+		return "{ \"title\": \"" + title + "\", " +
+				"\"description\":\"" + description + "\"}";
+	}
+	
 	
 	
 }
