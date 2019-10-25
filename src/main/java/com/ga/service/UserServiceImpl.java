@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ga.config.JwtUtil;
 import com.ga.dao.UserDao;
+import com.ga.entity.JwtResponse;
 import com.ga.entity.User;
 import com.ga.exception.EntityNotFoundException;
 import com.ga.exception.LoginException;
@@ -33,13 +34,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String signup(User user) {
+	public JwtResponse signup(User user) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
 		if (userDao.signup(user).getId() != null) {
 			UserDetails userDetails = loadUserByUsername(user.getUsername());
 
-			return jwtUtil.generateToken(userDetails);
+			return new JwtResponse(jwtUtil.generateToken(userDetails), user.getUsername());
 		}
 
 		return null;
@@ -48,13 +49,13 @@ public class UserServiceImpl implements UserService {
 	//public String login(User user) throws LoginException, EntityNotFoundException {
 	
 	@Override
-	public String login(User user) {
+	public JwtResponse login(User user) {
 		User foundUser = userDao.login(user);
 		if (foundUser != null && foundUser.getId() != null
 				&& bCryptPasswordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
 			UserDetails userDetails = loadUserByUsername(foundUser.getUsername());
 
-			return jwtUtil.generateToken(userDetails);
+			return new JwtResponse(jwtUtil.generateToken(userDetails), user.getUsername());
 		}
 		//throw new LoginException("Username or password incorrect.");
 		return null;
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
 	@Qualifier("encoder")
 	PasswordEncoder bCryptPasswordEncoder;
 
-	@Override
+	@Override 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userDao.getUserByUsername(username);
 

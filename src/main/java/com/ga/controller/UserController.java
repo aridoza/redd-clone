@@ -73,24 +73,24 @@ public class UserController {
 	// Public
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@Valid @RequestBody User user) {
-		Map<String, String> data = new HashMap<>();
+//		Map<String, String> data = new HashMap<>();
+//		
+//		data.put("token", new JwtResponse(userService.signup(user)).getToken());
+//		data.put("username", userService.loadUserByUsername(user.getUsername()).getUsername());
 		
-		data.put("token", new JwtResponse(userService.signup(user)).getToken());
-		data.put("username", userService.loadUserByUsername(user.getUsername()).getUsername());
-		
-        return ResponseEntity.ok(data);
+        return ResponseEntity.ok(userService.signup(user));
 	}
 	
 	// Public
 	@PostMapping("/login")
 //	public ResponseEntity<?> login(@RequestBody User user) throws LoginException, EntityNotFoundException {
 	public ResponseEntity<?> login(@RequestBody User user) {
-		Map<String, String> data = new HashMap<>();
+//		Map<String, String> data = new HashMap<>();
+//		
+//		data.put("token", new JwtResponse(userService.login(user)).getToken());
+//		data.put("username", userService.loadUserByEmail(user.getEmail()).getUsername());
 		
-		data.put("token", new JwtResponse(userService.login(user)).getToken());
-		data.put("username", userService.loadUserByEmail(user.getEmail()).getUsername());
-		
-        return ResponseEntity.ok(data);
+        return ResponseEntity.ok(userService.login(user));
     }
 	
 	// Authenticated
