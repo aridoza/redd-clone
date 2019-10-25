@@ -53,9 +53,10 @@ public class UserControllerTest {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 			.post("/user/signup")
 			.contentType(MediaType.APPLICATION_JSON)
-			.content(createUserInJson("testuser", "testpass", "test@testmail.com"));
+			.content(createUserInJsonWithEmail("testuser", "testpass", "test@testmail.com"));
 		
 		when(userService.signup(any())).thenReturn("testToken123456", "testuser");
+
 		
 		MvcResult result = mockMvc.perform(requestBuilder)
 			.andExpect(status().isOk())
@@ -70,18 +71,29 @@ public class UserControllerTest {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 			       .post("/user/login")
 			       .contentType(MediaType.APPLICATION_JSON)
-			       .content(createUserInJson("testuser", "testpass", "test@testmail.com"));
+			       .content(createUserInJsonUsingEmail("test@testmail.com", "testpass"));
 		
-		when(userService.login(any())).thenReturn("123456");
+		when(userService.login(any())).thenReturn("testToken123456");
 		
-		MvcResult result = (MvcResult) mockMvc.perform(requestBuilder)
+		MvcResult result = mockMvc.perform(requestBuilder)
           .andExpect(status().isOk())
-          .andExpect(content().json("{\"token\":\"123456\"}"));
+          .andExpect(content().json("{\"token\":\"testToken123456\", \"username\":\"testuser\"}"))
+          .andReturn();
 		
 		System.out.println(">>>>>>>>> signup User Success result: " + result.getResponse().getContentAsString());
 	}
 	
-	private static String createUserInJson(String username, String password, String email) {
+	private static String createUserInJson(String username, String password) {
+        return "{ \"username\": \"" + username + "\", " +
+                "\"password\":\"" + password + "\"}";
+	}
+	
+	private static String createUserInJsonUsingEmail(String email, String password) {
+        return "{ \"email\": \"" + email + "\", " +
+                "\"password\":\"" + password + "\"}";
+	}
+	
+	private static String createUserInJsonWithEmail(String username, String password, String email) {
         return "{\"username\": \"" + username + "\", " +
                 "\"password\": \"" + password + "\", " +
                 "\"email\": \"" + email + "\"}";
