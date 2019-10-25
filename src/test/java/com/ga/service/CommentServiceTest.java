@@ -1,4 +1,4 @@
-package com.ga.controller;
+package com.ga.service;
 
 public class CommentServiceTest {
 

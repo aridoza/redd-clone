@@ -1,4 +1,4 @@
-package com.ga.controller;
+package com.ga.dao;
 
 public class CommentDaoTest {
 
