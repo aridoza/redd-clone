@@ -1,6 +1,7 @@
 package com.ga.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.ga.dao.UserProfileDao;
@@ -19,7 +20,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Override
 	public UserProfile getUserProfile(String username) {
-		return userProfileDao.getUserProfile(username);
+		if (userProfileDao.getUserProfile(username) != null) {			
+			return userProfileDao.getUserProfile(username);
+		}
+		throw new UsernameNotFoundException("Profile doesn't exist");
 	}	
 
 }
