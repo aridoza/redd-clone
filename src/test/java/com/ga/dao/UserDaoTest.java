@@ -45,6 +45,9 @@ public class UserDaoTest {
     @Mock
     Query<User> query;
     
+    @InjectMocks
+    private List<User> userList;
+    
     @Before
     public void init() {
         user.setId(1L);
@@ -52,19 +55,23 @@ public class UserDaoTest {
         user.setPassword("testpass");
         user.setEmail("test@testmail.com");
     
+        userList.add(user);
+        
         when(sessionFactory.getCurrentSession()).thenReturn(session);
         when(session.getTransaction()).thenReturn(transaction);
+        when(session.createQuery(anyString())).thenReturn(query);
     }
     
     @Test
     public void listUsers_Users_Success() {
-    	userDao.signup(user);
+    	// mock below
+    	// when( function ( any string ).then or response ( List<anything you want> )
+    	when(query.getResultList()).thenReturn(userList);
     	
     	List<User> savedUsers = userDao.listUsers();
-    	
-    	System.out.println(savedUsers.get(0).toString());
-    	
+    	    	
         assertNotNull("Test returned null object, expected non-null", savedUsers);
+        assertEquals(savedUsers, userList);
     }
     
     @Test
@@ -88,10 +95,15 @@ public class UserDaoTest {
     
     @Test
     public void delete_UserId_Success() {
-    	User savedUser = userDao.signup(user);
-    	System.out.println(savedUser);
-    	userDao.deleteUser(savedUser.getId());
+    	userDao.signup(user);
     	
-    	assertNotNull(savedUser);
+    	when(session.createQuery(anyString())).thenReturn(query);
+    	when(query.getSingleResult()).thenReturn(user);
+//    	
+    	
+//    	System.out.println(savedUser);
+    	Long deletedUserId = userDao.deleteUser(user.getId());
+    	
+    	assertEquals(deletedUserId, Long.valueOf(1L));
     }
 }

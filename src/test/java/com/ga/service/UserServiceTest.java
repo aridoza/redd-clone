@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ga.config.JwtUtil;
 import com.ga.dao.UserDao;
+import com.ga.entity.JwtResponse;
 import com.ga.entity.User;
 
 public class UserServiceTest {
@@ -58,7 +59,7 @@ public class UserServiceTest {
         when(jwtUtil.generateToken(any())).thenReturn(expectedToken);
         when(bCryptPasswordEncoder.encode(user.getPassword())).thenReturn("testpass");
         
-        String actualToken = userService.signup(user);
+        JwtResponse actualToken = userService.signup(user);
         
         assertEquals(actualToken, expectedToken);
     }
@@ -70,12 +71,12 @@ public class UserServiceTest {
 
         when(userDao.signup(any())).thenReturn(tempUser);
 
-        String token = userService.signup(user);
+        JwtResponse token = userService.signup(user);
 
         assertEquals(token, null);
     }
     
-	@Test
+	@Test // TODO: Fix returns for token return refactor
     public void login_ReturnsJwt_Success() {
         String expectedToken = "fakeToken12345";
         
@@ -85,7 +86,7 @@ public class UserServiceTest {
         when(jwtUtil.generateToken(any())).thenReturn(expectedToken);
         when(bCryptPasswordEncoder.encode(user.getPassword())).thenReturn("testpass");
         
-        String actualToken = userService.login(user);
+        JwtResponse actualToken = userService.login(user);
         
         assertEquals(actualToken, expectedToken);
     }
@@ -97,7 +98,7 @@ public class UserServiceTest {
 
         when(userDao.login(any())).thenReturn(null);
 
-        String token = userService.login(user);
+        JwtResponse token = userService.login(user);
 
         assertEquals(token, null);
     }

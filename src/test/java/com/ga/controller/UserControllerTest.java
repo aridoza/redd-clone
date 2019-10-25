@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.ga.entity.JwtResponse;
 import com.ga.service.UserService;
 
 public class UserControllerTest {
@@ -59,15 +60,14 @@ public class UserControllerTest {
 	
 	@Test
 	public void signup_User_Success() throws Exception {
+		JwtResponse jwtResponse = new JwtResponse("testToken123456", "testuser");
+		
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 			.post("/user/signup")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(createUserInJsonAllFields("testuser", "testpass", "test@testmail.com"));
 		
-		when(userService.signup(any()))
-			.thenReturn("testToken123456", "testuser");
-		when(userService.loadUserByUsername(anyString()).getUsername())
-			.thenReturn("testuser");
+		when(userService.signup(any())).thenReturn(jwtResponse);
 		
 		MvcResult result = mockMvc.perform(requestBuilder)
 			.andExpect(status().isOk())
@@ -79,17 +79,14 @@ public class UserControllerTest {
 	
 	@Test
 	public void login_User_Success() throws Exception {
+		JwtResponse jwtResponse = new JwtResponse("testToken123456", "testuser");
+		
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 			       .post("/user/login")
 			       .contentType(MediaType.APPLICATION_JSON)
 			       .content(createUserInJsonUsingEmail("test@testmail.com", "testpass"));
 		
-		when(userService
-			.login(any()))
-			.thenReturn("testToken123456", "testuser");
-		when(userService
-			.loadUserByEmail(anyString()).getUsername())
-			.thenReturn("testuser");
+		when(userService.login(any())).thenReturn(jwtResponse);
 		
 		MvcResult result = mockMvc.perform(requestBuilder)
 			.andExpect(status().isOk())
