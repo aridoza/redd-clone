@@ -53,7 +53,10 @@ public class UserControllerTest {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 			.post("/user/signup")
 			.contentType(MediaType.APPLICATION_JSON)
-			.content(createUserInJsonWithEmail("testuser", "testpass", "test@testmail.com"));
+			.content(createUserInJsonAllFields("testuser", "testpass", "test@testmail.com"));
+		
+		System.out.println("signupUserSuccess createUserInJsonAllFields: " + 
+			createUserInJsonAllFields("testuser", "testpass", "test@testmail.com"));
 		
 		when(userService.signup(any())).thenReturn("testToken123456", "testuser");
 
@@ -93,7 +96,7 @@ public class UserControllerTest {
                 "\"password\":\"" + password + "\"}";
 	}
 	
-	private static String createUserInJsonWithEmail(String username, String password, String email) {
+	private static String createUserInJsonAllFields(String username, String password, String email) {
         return "{\"username\": \"" + username + "\", " +
                 "\"password\": \"" + password + "\", " +
                 "\"email\": \"" + email + "\"}";
