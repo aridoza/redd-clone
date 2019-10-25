@@ -39,6 +39,7 @@
 			<artifactId>javax.annotation-api</artifactId>
 			<version>1.2</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>javax.persistence-api</artifactId>
@@ -62,7 +63,6 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.2.2</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>postgresql</groupId>
@@ -132,6 +132,34 @@
 			<artifactId>jsonassert</artifactId>
 			<version>1.5.0</version>
 			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>4.12</version>
+		    <scope>test</scope>
+		</dependency>
+		    
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-test</artifactId>
+		    <version>5.1.9.RELEASE</version>
+		    <scope>test</scope>
+		</dependency>
+		    
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-core</artifactId>
+		    <version>3.0.0</version>
+		    <scope>test</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.skyscreamer</groupId>
+		    <artifactId>jsonassert</artifactId>
+		    <version>1.5.0</version>
+		    <scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
