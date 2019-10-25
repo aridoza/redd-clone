@@ -37,6 +37,11 @@ public class PostController {
 	@Autowired
 	CommentService commentService;
 	
+	@GetMapping("/hello")
+    public String helloWorld() {
+        return "Hello World!!";
+    }
+	
 //	@PostConstruct
 //	public void initializePosts() {
 //		posts = new ArrayList<Post>();
