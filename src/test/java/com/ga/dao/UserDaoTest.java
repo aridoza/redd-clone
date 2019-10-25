@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,6 +39,9 @@ public class UserDaoTest {
     @Mock
     Transaction transaction;
     
+    @Mock
+    Query<User> query;
+    
     @Before
     public void init() {
         user.setId(1L);
@@ -52,6 +56,17 @@ public class UserDaoTest {
     @Test
     public void signup_User_Success() {
         User savedUser = userDao.signup(user);
+        
+        assertNotNull("Test returned null object, expected non-null", savedUser);
+        assertEquals(savedUser, user);
+    }
+    
+    @Test
+    public void login_User_Success() {
+    	when(session.createQuery(anyString())).thenReturn(query);
+    	when(query.getSingleResult()).thenReturn(user);
+    	
+        User savedUser = userDao.login(user);
         
         assertNotNull("Test returned null object, expected non-null", savedUser);
         assertEquals(savedUser, user);
