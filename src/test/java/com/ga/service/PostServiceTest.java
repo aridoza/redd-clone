@@ -9,8 +9,9 @@ import org.mockito.MockitoAnnotations;
 import com.ga.config.JwtUtil;
 import com.ga.dao.PostDao;
 import com.ga.entity.Post;
+import com.ga.entity.User;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,13 +23,16 @@ import java.util.List;
 public class PostServiceTest {
 	
 	@Mock
-	PostDao postDao;
+	private PostDao postDao;
 	
 	@Mock
 	private JwtUtil jwtUtil;
 	
 	@InjectMocks
 	private PostServiceImpl postService;
+	
+	@InjectMocks
+	private User user;
 	
 	@InjectMocks
 	private Post post;
@@ -45,6 +49,13 @@ public class PostServiceTest {
 		post.setDescription("dummy post description");
 	}
 	
+	@Before
+    public void initializeDummyUser() {
+        user.setId(1L);
+        user.setUsername("batman");
+        user.setPassword("robin");
+    }
+	
 	@Test
 	public void listPosts_Post_Success() {
 		Post post = new Post();
@@ -52,13 +63,51 @@ public class PostServiceTest {
 		post.setTitle("new post");
 		post.setDescription("post description");
 		
-		System.out.println(post);
+		//System.out.println(post);
 		
 		List<Post> posts = postService.listPosts();
 		posts.add(post);
 		
-		System.out.println(posts);
+//		assertEquals(posts.get(0).getTitle(), post.getTitle())
 		
-		Assert.assertEquals(posts.get(0).getTitle(), post.getTitle())
-;	}
+		when(postDao.listPosts()).thenReturn(posts);
+		
+		assertEquals(posts.get(0).getTitle(), post.getTitle());
+	}
+	
+	@Test
+	public void createPost_AddsPost_Success() {
+		Post newPost = post;
+		
+		//Assert.assertNotNull(newPost);
+		assertEquals(newPost.getTitle(), post.getTitle());
+		
+		when(postDao.createPost(newPost)).thenReturn(post);
+	}
+	
+	@Test
+	public void updatePost_UpdatesPost_Success() {
+		when(postDao.updatePost(any(), anyLong())).thenReturn(post);
+		
+		Post tempPost = postService.updatePost(post, post.getId());
+		
+		assertEquals(tempPost.getTitle(), post.getTitle());
+	}
+	
+	@Test
+	public void deletePost_DeletesPost_Success() {
+		Post tempPost = new Post();
+		tempPost.setId(1L);
+		tempPost.setTitle("hello");
+		tempPost.setDescription("a post");
+		
+		Long deletedPost = postService.deletePost(tempPost.getId());
+		
+		when(postService.deletePost(tempPost.getId())).thenReturn(tempPost.getId());
+	}
+	
+	@Test
+	public void listPostsByUsername_ListPosts_Success() {
+		
+	}
 }
