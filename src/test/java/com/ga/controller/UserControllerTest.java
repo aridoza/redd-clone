@@ -64,11 +64,9 @@ public class UserControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(createUserInJsonAllFields("testuser", "testpass", "test@testmail.com"));
 		
-		when(userService
-			.signup(any()))
+		when(userService.signup(any()))
 			.thenReturn("testToken123456", "testuser");
-		when(userService
-			.loadUserByUsername(anyString()).getUsername())
+		when(userService.loadUserByUsername(anyString()).getUsername())
 			.thenReturn("testuser");
 		
 		MvcResult result = mockMvc.perform(requestBuilder)
@@ -103,10 +101,8 @@ public class UserControllerTest {
 	
 	@Test
 	public void delete_User_Success() throws Exception {
-		String tempUserId = "1";
-		
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
-				.delete("/user/{tempUserId}");
+				.delete("/user/1");
 		
 		when(userService
 				.deleteUser(anyLong()))

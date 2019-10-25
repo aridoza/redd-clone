@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -103,12 +104,27 @@ public class UserServiceTest {
     
     @Test
     public void delete_UserId_Success() {
+    	Long expectedUserId = 1L;
+    	
     	when(userDao.deleteUser(anyLong())).thenReturn(1L);
+    	
+    	Long actualUserId = userService.deleteUser(1L);
+    	
+    	assertEquals(expectedUserId, actualUserId);
     }
 
     @Test // TODO: Finish
     public void loadUserByUsername_UserDetails_Success() {
+    	User tempUser = user;
+    	tempUser.setUsername("testuser");
+    	
     	when(userDao.getUserByUsername(anyString())).thenReturn(user);
+    	
+    	UserDetails loadedUser = userService.loadUserByUsername("testuser");
+    	
+    	System.out.println(loadedUser.getUsername());
+    	
+    	assertEquals(tempUser.getUsername(), loadedUser.getUsername());
     }
     
     @Test(expected = UsernameNotFoundException.class)

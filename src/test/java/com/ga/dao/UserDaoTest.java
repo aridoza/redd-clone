@@ -2,8 +2,11 @@ package com.ga.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -54,6 +57,17 @@ public class UserDaoTest {
     }
     
     @Test
+    public void listUsers_Users_Success() {
+    	userDao.signup(user);
+    	
+    	List<User> savedUsers = userDao.listUsers();
+    	
+    	System.out.println(savedUsers.get(0).toString());
+    	
+        assertNotNull("Test returned null object, expected non-null", savedUsers);
+    }
+    
+    @Test
     public void signup_User_Success() {
         User savedUser = userDao.signup(user);
         
@@ -70,5 +84,14 @@ public class UserDaoTest {
         
         assertNotNull("Test returned null object, expected non-null", savedUser);
         assertEquals(savedUser, user);
+    }
+    
+    @Test
+    public void delete_UserId_Success() {
+    	User savedUser = userDao.signup(user);
+    	System.out.println(savedUser);
+    	userDao.deleteUser(savedUser.getId());
+    	
+    	assertNotNull(savedUser);
     }
 }
