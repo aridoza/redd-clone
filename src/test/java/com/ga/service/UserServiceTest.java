@@ -35,26 +35,25 @@ public class UserServiceTest {
     
     @Before
     public void initMocks() {
-        MockitoAnnotations.initMocks(this);
+      MockitoAnnotations.initMocks(this);
     }
     
     @Before
-    public void initDummyUser() {
-    	user.setId(1L);
-    	user.setUsername("testuser");
-    	user.setPassword("testpass");
-    	
-    	System.out.println(user);
+    public void initializeDummyUser() {
+        user.setId(1L);
+        user.setUsername("testuser");
+        user.setPassword("testpass");
+        user.setEmail("test@testmail.com");
     }
         
     @Test
     public void signup_ReturnsJwt_Success() {
-        String expectedToken = "12345";
+    	String expectedToken = "12345";
         
         when(userDao.signup(any())).thenReturn(user);
         when(userDao.getUserByUsername(anyString())).thenReturn(user);
         when(jwtUtil.generateToken(any())).thenReturn(expectedToken);
-        when(bCryptPasswordEncoder.encode(user.getPassword())).thenReturn("testuser");
+        when(bCryptPasswordEncoder.encode(user.getPassword())).thenReturn("testpass");
         
         String actualToken = userService.signup(user);
         
