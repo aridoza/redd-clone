@@ -48,7 +48,7 @@ public class UserServiceTest {
         
     @Test
     public void signup_ReturnsJwt_Success() {
-    	String expectedToken = "12345";
+    	String expectedToken = "fakeToken12345";
         
         when(userDao.signup(any())).thenReturn(user);
         when(userDao.getUserByUsername(anyString())).thenReturn(user);
@@ -68,6 +68,34 @@ public class UserServiceTest {
         when(userDao.signup(any())).thenReturn(tempUser);
 
         String token = userService.signup(user);
+
+        assertEquals(token, null);
+    }
+    
+	@Test
+    public void login_ReturnsJwt_Success() {
+        String expectedToken = "fakeToken12345";
+        
+        when(userDao.login(any())).thenReturn(user);
+        when(bCryptPasswordEncoder.matches(any(), any())).thenReturn(true);
+        when(userDao.getUserByUsername(anyString())).thenReturn(user);
+        when(jwtUtil.generateToken(any())).thenReturn(expectedToken);
+        when(bCryptPasswordEncoder.encode(user.getPassword())).thenReturn("testpass");
+        
+        String actualToken = userService.login(user);
+        
+        assertEquals(actualToken, expectedToken);
+    }
+    
+    @Test
+    public void login_UserNotFound_Error() {
+    	
+    	User tempUser = user;
+    	tempUser.setId(null);
+
+        when(userDao.login(any())).thenReturn(null);
+
+        String token = userService.login(user);
 
         assertEquals(token, null);
     }
