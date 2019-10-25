@@ -1,6 +1,7 @@
 package com.ga.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +22,14 @@ public class UserProfileController {
     UserProfileService userProfileService;
 	
     // Authenticated
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{username}")
     public UserProfile getUserProfile(@PathVariable String username) {
         return userProfileService.getUserProfile(username);
     }
     
     // Authenticated
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{username}")
     public UserProfile createUserProfile(@PathVariable String username, @RequestBody UserProfile userProfile) {
         return userProfileService.createUserProfile(username, userProfile);
