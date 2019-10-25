@@ -53,19 +53,12 @@ public class UserControllerTest {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 			.post("/user/signup")
 			.contentType(MediaType.APPLICATION_JSON)
-<<<<<<< HEAD
 			.content(createUserInJsonAllFields("testuser", "testpass", "test@testmail.com"));
 		
 		System.out.println("signupUserSuccess createUserInJsonAllFields: " + 
 			createUserInJsonAllFields("testuser", "testpass", "test@testmail.com"));
 		
 		when(userService.signup(any())).thenReturn("testToken123456", "testuser");
-
-=======
-			.content(createUserInJson("testuser", "testpass", "test@testmail.com"));
-		
-		when(userService.signup(any())).thenReturn("testToken123456", "testuser");
->>>>>>> added signup and login test to controller test, tests failing
 		
 		MvcResult result = mockMvc.perform(requestBuilder)
 			.andExpect(status().isOk())
@@ -80,7 +73,6 @@ public class UserControllerTest {
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 			       .post("/user/login")
 			       .contentType(MediaType.APPLICATION_JSON)
-<<<<<<< HEAD
 			       .content(createUserInJsonUsingEmail("test@testmail.com", "testpass"));
 		
 		when(userService.login(any())).thenReturn("testToken123456");
@@ -89,20 +81,10 @@ public class UserControllerTest {
           .andExpect(status().isOk())
           .andExpect(content().json("{\"token\":\"testToken123456\", \"username\":\"testuser\"}"))
           .andReturn();
-=======
-			       .content(createUserInJson("testuser", "testpass", "test@testmail.com"));
-		
-		when(userService.login(any())).thenReturn("123456");
-		
-		MvcResult result = (MvcResult) mockMvc.perform(requestBuilder)
-          .andExpect(status().isOk())
-          .andExpect(content().json("{\"token\":\"123456\"}"));
->>>>>>> added signup and login test to controller test, tests failing
 		
 		System.out.println(">>>>>>>>> signup User Success result: " + result.getResponse().getContentAsString());
 	}
 	
-<<<<<<< HEAD
 	private static String createUserInJson(String username, String password) {
         return "{ \"username\": \"" + username + "\", " +
                 "\"password\":\"" + password + "\"}";
@@ -114,9 +96,6 @@ public class UserControllerTest {
 	}
 	
 	private static String createUserInJsonAllFields(String username, String password, String email) {
-=======
-	private static String createUserInJson(String username, String password, String email) {
->>>>>>> added signup and login test to controller test, tests failing
         return "{\"username\": \"" + username + "\", " +
                 "\"password\": \"" + password + "\", " +
                 "\"email\": \"" + email + "\"}";
