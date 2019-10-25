@@ -3,6 +3,7 @@ package com.ga.service;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ga.config.JwtUtil;
@@ -88,8 +90,7 @@ public class UserServiceTest {
     }
     
     @Test
-    public void login_UserNotFound_Error() {
-    	
+    public void login_UserNotFound_Error() {    	
     	User tempUser = user;
     	tempUser.setId(null);
 
@@ -99,5 +100,37 @@ public class UserServiceTest {
 
         assertEquals(token, null);
     }
+    
+    @Test
+    public void delete_UserId_Success() {
+    	when(userDao.deleteUser(anyLong())).thenReturn(1L);
+    }
 
+    @Test // TODO: Finish
+    public void loadUserByUsername_UserDetails_Success() {
+    	when(userDao.getUserByUsername(anyString())).thenReturn(user);
+    }
+    
+    @Test(expected = UsernameNotFoundException.class)
+    public void loadUserByUsername_ExpectException_Error() {
+    	User tempUser = user;
+    	tempUser.setId(null);
+    	
+    	when(userService.loadUserByUsername(tempUser.getUsername()))
+    		.thenThrow(UsernameNotFoundException.class);
+    }
+    
+    @Test // TODO: Finish
+    public void loadUserByEmail_UserDetails_Success() {
+    	when(userDao.getUserByUsername(anyString())).thenReturn(user);
+    }
+    
+    @Test(expected = UsernameNotFoundException.class)
+    public void loadUserByEmail_ExpectException_Error() {
+    	User tempUser = user;
+    	tempUser.setId(null);
+    	
+    	when(userService.loadUserByEmail(tempUser.getEmail()))
+    		.thenThrow(UsernameNotFoundException.class);
+    }
 }
