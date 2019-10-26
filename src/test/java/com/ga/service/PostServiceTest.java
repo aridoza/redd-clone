@@ -18,6 +18,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.eq;
+
 import java.util.List;
 
 public class PostServiceTest {
@@ -80,9 +84,9 @@ public class PostServiceTest {
 		Post newPost = post;
 		
 		//Assert.assertNotNull(newPost);
-		assertEquals(newPost.getTitle(), post.getTitle());
-		
 		when(postDao.createPost(newPost)).thenReturn(post);
+		
+		assertEquals(newPost.getTitle(), post.getTitle());
 	}
 	
 	@Test
@@ -97,17 +101,28 @@ public class PostServiceTest {
 	@Test
 	public void deletePost_DeletesPost_Success() {
 		Post tempPost = new Post();
-		tempPost.setId(1L);
-		tempPost.setTitle("hello");
-		tempPost.setDescription("a post");
+		tempPost.setId(2L);
 		
-		Long deletedPost = postService.deletePost(tempPost.getId());
+		Long deletedPostId = postDao.deletePost(tempPost.getId());
 		
-		when(postService.deletePost(tempPost.getId())).thenReturn(tempPost.getId());
+		when(postDao.deletePost(tempPost.getId())).thenReturn(tempPost.getId());
+		
+		verify(postDao, times(1)).deletePost(eq(tempPost.getId()));
 	}
 	
 	@Test
 	public void listPostsByUsername_ListPosts_Success() {
+		Post post = new Post();
+		post.setId(1L);
+		post.setTitle("new post");
+		post.setDescription("post description");
+		post.setUser(user);
 		
+		List<Post> posts = postService.listPosts();
+		posts.add(post);
+		
+		when(postDao.listPosts()).thenReturn(posts);
+		
+		assertEquals(posts.get(0).getUser(), post.getUser());
 	}
 }
