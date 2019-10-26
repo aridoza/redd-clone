@@ -105,7 +105,7 @@ public class PostServiceTest {
 		
 		Long deletedPostId = postDao.deletePost(tempPost.getId());
 		
-		when(postDao.deletePost(tempPost.getId())).thenReturn(tempPost.getId());
+		when(postService.deletePost(tempPost.getId())).thenReturn(tempPost.getId());
 		
 		verify(postDao, times(1)).deletePost(eq(tempPost.getId()));
 	}
