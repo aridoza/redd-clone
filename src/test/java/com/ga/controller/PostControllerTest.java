@@ -6,7 +6,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.ga.entity.Post;
-import com.ga.service.PostService;
+import com.ga.service.PostServiceImpl;
+import com.ga.dao.PostDaoImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +46,10 @@ public class PostControllerTest {
 	private Post post;
 	
 	@Mock
-	PostService postService;
+	PostServiceImpl postService;
+	
+	@Mock
+	PostDaoImpl postDao;
 	
 	@Before
 	public void init() {
