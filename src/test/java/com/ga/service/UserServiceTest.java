@@ -150,7 +150,7 @@ public class UserServiceTest {
     	
     	UserDetails loadedUser = userService.loadUserByEmail("test@testmail.com");
     	
-    	assertEquals(loadedUser.getUsername(), user.getUsername());
+    	assertEquals(tempUser.getUsername(), loadedUser.getUsername());
     }
     
     @Test(expected = UsernameNotFoundException.class)
