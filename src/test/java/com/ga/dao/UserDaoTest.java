@@ -45,7 +45,7 @@ public class UserDaoTest {
     @Mock
     Query<User> query;
     
-    @InjectMocks
+    @Mock
     private List<User> userList;
     
     @Before
@@ -71,7 +71,7 @@ public class UserDaoTest {
     	List<User> savedUsers = userDao.listUsers();
     	    	
         assertNotNull("Test returned null object, expected non-null", savedUsers);
-        assertEquals(savedUsers, userList);
+        assertEquals(userList, savedUsers);
     }
     
     @Test
@@ -79,31 +79,57 @@ public class UserDaoTest {
         User savedUser = userDao.signup(user);
         
         assertNotNull("Test returned null object, expected non-null", savedUser);
-        assertEquals(savedUser, user);
+        assertEquals(user, savedUser);
     }
     
     @Test
     public void login_User_Success() {
-    	when(session.createQuery(anyString())).thenReturn(query);
     	when(query.getSingleResult()).thenReturn(user);
     	
         User savedUser = userDao.login(user);
         
         assertNotNull("Test returned null object, expected non-null", savedUser);
-        assertEquals(savedUser, user);
+        assertEquals(user, savedUser);
     }
     
     @Test
     public void delete_UserId_Success() {
-    	userDao.signup(user);
-    	
-    	when(session.createQuery(anyString())).thenReturn(query);
     	when(query.getSingleResult()).thenReturn(user);
-//    	
     	
-//    	System.out.println(savedUser);
+    	System.out.println(user.getId());
+    	
     	Long deletedUserId = userDao.deleteUser(user.getId());
-    	
-    	assertEquals(deletedUserId, Long.valueOf(1L));
+//    	Long deletedUserId = 1L;
+    	System.out.println(deletedUserId);
+    	assertEquals(user.getId(), deletedUserId);
     }
+    
+    @Test
+    public void getUserByUsername_User_Success() {
+    	when(query.getSingleResult()).thenReturn(user);
+    	
+    	User returnedUser = userDao.getUserByUsername(user.getUsername());
+    	
+    	assertEquals(user.getUsername(), returnedUser.getUsername());
+    }
+    
+    @Test
+    public void getUserByEmail_User_Success() {
+    	when(query.getSingleResult()).thenReturn(user);
+    	
+    	User returnedUser = userDao.getUserByEmail(user.getEmail());
+    	
+    	assertEquals(user.getEmail(), returnedUser.getEmail());
+    }
+    
+    @Test
+    public void getUserByUserId_User_Success() {
+    	when(query.getSingleResult()).thenReturn(user);
+    	
+    	User returnedUser = userDao.getUserByUserId(user.getId());
+    	
+    	assertEquals(user.getId(), returnedUser.getId());
+    }
+    
+    
 }
