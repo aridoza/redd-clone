@@ -34,6 +34,9 @@ public class UserProfileDaoTest {
     private UserProfile userProfile;
     
     @InjectMocks
+    private User user;
+
+    @InjectMocks
     private UserProfileDaoImpl userProfileDao;
     
     @Mock
@@ -47,9 +50,6 @@ public class UserProfileDaoTest {
     
     @Mock
     Query<UserProfile> query;
-    
-    @Mock
-    private User user;
     
     @Mock
     private UserDaoImpl userDao;
@@ -72,6 +72,8 @@ public class UserProfileDaoTest {
         
         user.setUserProfile(userProfile);
         
+        System.out.println(userProfile.getAdditionalEmail());
+        
         when(sessionFactory.getCurrentSession()).thenReturn(session);
         when(session.getTransaction()).thenReturn(transaction);
         when(session.createQuery(anyString())).thenReturn(query);
@@ -92,7 +94,7 @@ public class UserProfileDaoTest {
     	when(userDao.getUserByUsername("testuser")).thenReturn(user);
     	when(query.getSingleResult()).thenReturn(userProfile);
     	
-        UserProfile savedUserProfile = userProfileDao.getUserProfile("testuser");
+        UserProfile savedUserProfile = userProfileDao.getUserProfile(user.getUsername());
         
         assertNotNull("Test returned null object, expected non-null", savedUserProfile);
         assertEquals(userProfile, savedUserProfile);
@@ -101,6 +103,7 @@ public class UserProfileDaoTest {
     // Still not covering exception throwing
     @Test(expected = UsernameNotFoundException.class)
     public void getUserProfile_throwUsernameNotFoundException_Failure() {
+    	when(userDao.getUserByUsername("nonexistentuser")).thenThrow(UsernameNotFoundException.class);
     	when(query.getSingleResult()).thenReturn(userProfile);
     	
         UserProfile savedUserProfile = userProfileDao.getUserProfile(null);
