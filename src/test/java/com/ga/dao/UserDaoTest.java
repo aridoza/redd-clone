@@ -102,4 +102,31 @@ public class UserDaoTest {
     	
     	assertEquals(deletedUserId, user.getId());
     }
+    
+    @Test
+    public void getUserByUsername_User_Success() {
+    	when(query.uniqueResult()).thenReturn(user);
+    	
+    	User savedUser = userDao.getUserByUsername(user.getUsername());
+    	
+    	assertEquals(savedUser, user);
+    }
+    
+    @Test
+    public void getUserByUserId_User_Success() {
+    	when(query.uniqueResult()).thenReturn(user);
+    	
+    	User savedUser = userDao.getUserByUserId(user.getId());
+    	
+    	assertEquals(savedUser, user);
+    }
+    
+    @Test
+    public void getUserByEmail_User_Success() {
+    	when(query.uniqueResult()).thenReturn(user);
+    	
+    	User savedUser = userDao.getUserByEmail(user.getEmail());
+    	
+    	assertEquals(savedUser, user);
+    }
 }
