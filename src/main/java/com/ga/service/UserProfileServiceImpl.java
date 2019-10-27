@@ -10,8 +10,12 @@ import com.ga.entity.UserProfile;
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
 	
-	@Autowired
-	UserProfileDao userProfileDao;
+    private UserProfileDao userProfileDao;
+    
+    @Autowired
+    public UserProfileServiceImpl(UserProfileDao userProfileDao) {
+        this.userProfileDao = userProfileDao;
+    }
 
 	@Override
 	public UserProfile createUserProfile(String username, UserProfile newProfile) {
