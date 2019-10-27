@@ -80,4 +80,6 @@ public class CommentDaoTest {
         user.setUsername("batman");
         user.setPassword("robin");
 	}
+	
+	
 }
