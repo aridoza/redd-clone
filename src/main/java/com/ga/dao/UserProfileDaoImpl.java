@@ -3,6 +3,7 @@ package com.ga.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import com.ga.entity.User;
@@ -40,8 +41,11 @@ public class UserProfileDaoImpl implements UserProfileDao {
 
 	@Override
 	public UserProfile getUserProfile(String username) {
-		User user = userDao.getUserByUsername(username);
-		return user.getUserProfile();
+		if (username != null) {			
+			User user = userDao.getUserByUsername(username);
+			return user.getUserProfile();
+		}
+		throw new UsernameNotFoundException("Username not found");
 	}
 
 }

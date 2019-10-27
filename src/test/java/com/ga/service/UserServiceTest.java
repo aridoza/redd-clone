@@ -143,6 +143,9 @@ public class UserServiceTest {
     
     @Test // TODO: Finish
     public void loadUserByEmail_UserDetails_Success() {
+    	User tempUser = user;
+    	tempUser.setUsername("testuser");
+    	
     	when(userDao.getUserByEmail(anyString())).thenReturn(user);
     	
     	UserDetails loadedUser = userService.loadUserByEmail("test@testmail.com");
