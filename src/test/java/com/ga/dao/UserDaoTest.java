@@ -72,7 +72,7 @@ public class UserDaoTest {
     	List<User> savedUsers = userDao.listUsers();
     	    	
         assertNotNull("Test returned null object, expected non-null", savedUsers);
-        assertEquals(savedUsers, userList);
+        assertEquals(userList, savedUsers);
     }
     
     @Test
@@ -80,7 +80,7 @@ public class UserDaoTest {
         User savedUser = userDao.signup(user);
         
         assertNotNull("Test returned null object, expected non-null", savedUser);
-        assertEquals(savedUser, user);
+        assertEquals(user, savedUser);
     }
     
     @Test
@@ -90,17 +90,20 @@ public class UserDaoTest {
         User savedUser = userDao.login(user);
         
         assertNotNull("Test returned null object, expected non-null", savedUser);
-        assertEquals(savedUser, user);
+        assertEquals(user, savedUser);
     }
     
     @Test
     public void delete_UserId_Success() {
     	when(session.get(User.class, user.getId())).thenReturn(user);
     	when(query.getSingleResult()).thenReturn(user);
-
-    	Long deletedUserId = userDao.deleteUser(user.getId());
     	
-    	assertEquals(deletedUserId, user.getId());
+    	System.out.println(user.getId());
+    	
+    	Long deletedUserId = userDao.deleteUser(user.getId());
+
+    	System.out.println(deletedUserId);
+    	assertEquals(user.getId(), deletedUserId);
     }
     
     @Test
@@ -129,4 +132,5 @@ public class UserDaoTest {
     	
     	assertEquals(savedUser, user);
     }
+    
 }

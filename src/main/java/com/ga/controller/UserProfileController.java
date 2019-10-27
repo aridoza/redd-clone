@@ -18,8 +18,12 @@ import com.ga.service.UserProfileService;
 @RequestMapping("/profile")
 public class UserProfileController {
 	
+    private UserProfileService userProfileService;
+    
     @Autowired
-    UserProfileService userProfileService;
+    public void setUserProfileService(UserProfileService userProfileService) {
+        this.userProfileService = userProfileService;
+    }
 	
     // Authenticated
     @PreAuthorize("isAuthenticated()")
