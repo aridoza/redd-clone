@@ -1,13 +1,20 @@
 package com.ga.controller;
 
 import org.junit.runner.RunWith;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import com.ga.dao.CommentDao;
+import com.ga.entity.Comment;
 import com.ga.entity.Post;
+import com.ga.entity.User;
+import com.ga.service.CommentService;
+import com.ga.service.PostService;
 import com.ga.service.PostServiceImpl;
-import com.ga.dao.PostDaoImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,11 +53,20 @@ public class PostControllerTest {
 	@InjectMocks
 	private Post post;
 	
-	@Mock
-	PostServiceImpl postService;
+	@InjectMocks
+	private User user;
+	
+	@InjectMocks
+	private Comment comment;
 	
 	@Mock
-	PostDaoImpl postDao;
+	PostService postService;
+	
+	@Mock
+	CommentService commentService;
+	
+	@Mock
+	CommentDao commentDao;
 	
 	@Before
 	public void init() {
@@ -58,8 +75,25 @@ public class PostControllerTest {
 	
 	@Before
 	public void initializeDummyPost() {
+		post.setId(1L);
 		post.setTitle("first post");
 		post.setDescription("post description");
+		
+	}
+	
+	@Before
+	public void initializeDummyComment() {
+		comment.setId(1L);
+		comment.setPost(post);
+		comment.setText("some comment");
+		comment.setUser(user);
+	}
+	
+	@Before
+	public void initializeDummyUser() {
+		user.setId(1L);
+        user.setUsername("batman");
+        user.setPassword("robin");
 	}
 	
 	@Test
@@ -92,7 +126,7 @@ public class PostControllerTest {
 //	.andExpect(jsonPath("$[0].description", is("heres a post description")));
 	
 //	.andExpect(content().json("{\"title\":\"first post\"}"));
- */
+ 
 	
 //	System.out.println(firstPost);
 //	
@@ -124,28 +158,162 @@ public class PostControllerTest {
 //	}
 //	.andExpect(content().json("{\"title\":\"first post\"}"));
 	
+*/	
+	
 	
 	@Test
-	public void listPosts_Post_Success() throws Exception {		
+	public void getPosts_Post_Success() throws Exception {	
+		
 		Post firstPost = new Post();
 		firstPost.setTitle("first post");
-		firstPost.setDescription("heres a post description");
+		firstPost.setDescription("first post description");
+		
+		Post secondPost = new Post();
+		secondPost.setTitle("second post");
+		secondPost.setDescription("second post description");
+		
 		
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 				.get("/post/posts")
-				.contentType(MediaType.APPLICATION_JSON);
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(createPostInJson("first post", "heres a post description"));
 		
+		when(postService.listPosts()).thenReturn(Arrays.asList(firstPost, secondPost));
 		
 		mockMvc.perform(requestBuilder)	
 			.andExpect(status().isOk())
-			.andExpect(content().string(firstPost.getTitle()));
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$", hasSize(2)));
+		
+		verify(postService, times(1)).listPosts();
+		verifyNoMoreInteractions(postService);
 			
+	}
+	
+	@Test
+	public void updatePost_Post_Success() throws Exception {
+		Post firstPost = new Post();
+		firstPost.setId(1L);
+		firstPost.setTitle("first post");
+		firstPost.setDescription("first post description");
+		firstPost.setUser(user);
+		
+		when(postService.updatePost(any(), eq(1L))).thenReturn(firstPost);
+		
+		MvcResult result = mockMvc.perform(put("/post/1")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(createPostInJson("first post", "heres an updated post description"))
+				.accept(MediaType.APPLICATION_JSON)
+				)
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andReturn();
+		
+		System.out.println(result);
+		
+		verify(postService, times(1)).updatePost(any(), eq(1L));
+		verifyNoMoreInteractions(postService);
+	}
+	
+	//@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@Test
+	public void createPost_Post_Success() throws Exception {
+		Post firstPost = new Post();
+		firstPost.setId(1L);
+		firstPost.setTitle("first post");
+		firstPost.setDescription("first post description");
+		firstPost.setUser(user);
+		
+		when(postService.createPost(any(), eq("batman"))).thenReturn(firstPost);
+		
+		MvcResult result = mockMvc.perform(post("/post/batman")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(createPostInJson("first post", "heres a post description"))
+				.accept(MediaType.APPLICATION_JSON)
+				)
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andReturn();
+		
+		System.out.println(result);
+		
+		verify(postService, times(1)).createPost(any(), eq("batman"));
+		verifyNoMoreInteractions(postService);
+		
+	}
+	
+	@Test
+	public void deletePost_PostId_Success() throws Exception {
+		Post firstPost = new Post();
+		firstPost.setId(1L);
+		firstPost.setTitle("first post");
+		firstPost.setDescription("first post description");
+		firstPost.setUser(user);
+		
+		when(postService.deletePost(any())).thenReturn(firstPost.getId());
+		
+		MvcResult result = mockMvc.perform(delete("/post/1")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(createPostInJson("first post", "heres a post description"))
+				.accept(MediaType.APPLICATION_JSON)
+				)
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andReturn();
+		
+		System.out.println(result);
+		
+		verify(postService, times(1)).deletePost(any());
+		verifyNoMoreInteractions(postService);
+	}
+	
+	@Test
+	public void getCommentsByPostId_Comments_Success() throws Exception {
+		
+		Post firstPost = new Post();
+		firstPost.setId(1L);
+		firstPost.setTitle("first post");
+		firstPost.setDescription("first post description");
+		firstPost.setUser(user);
+		
+		Comment comment = new Comment();
+		comment.setId(1L);
+		comment.setPost(firstPost);
+		comment.setText("some comment");
+		comment.setUser(user);
+		
+		firstPost.setComments(Arrays.asList(comment));
+		
+		//when(postService.createPost(any(), eq("batman"))).thenReturn(firstPost);
+		//when(commentService.createComment(any(), any(), eq("batman"))).thenReturn(comment);
+		//when(postService.listPosts()).thenReturn(Arrays.asList(firstPost));
+		when(commentService.getCommentsByPostId(any())).thenReturn(Arrays.asList(comment));
+		
+		MvcResult result = mockMvc.perform(get("/post/1/comment")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(createCommentInJson(comment, firstPost.getId(), "123456"))
+				.accept(MediaType.APPLICATION_JSON)
+				)
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+				.andReturn();
+		
+		System.out.println(result);
+		
+		verify(commentService, times(1)).getCommentsByPostId(any());
+		verifyNoMoreInteractions(commentService);
 	}
 	
 	
 	private static String createPostInJson(String title, String description) {
 		return "{ \"title\": \"" + title + "\", " +
 				"\"description\":\"" + description + "\"}";
+	}
+	
+	private static String createCommentInJson(Comment comment, Long postId, String token) {
+		return "{ \"comment\": \"" + comment + "\", " +
+				"\"postId\":\"" + postId + "\", " + 
+				"\"token\":\"" + token + "\"}";
 	}
 	
 	
