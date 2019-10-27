@@ -61,7 +61,7 @@ public class UserServiceTest {
         
         JwtResponse actualToken = userService.signup(user);
         
-        assertEquals(actualToken, expectedToken);
+        assertEquals(actualToken.getToken(), expectedToken);
     }
     
     @Test
@@ -88,7 +88,7 @@ public class UserServiceTest {
         
         JwtResponse actualToken = userService.login(user);
         
-        assertEquals(actualToken, expectedToken);
+        assertEquals(actualToken.getToken(), expectedToken);
     }
     
     @Test
@@ -139,7 +139,16 @@ public class UserServiceTest {
     
     @Test // TODO: Finish
     public void loadUserByEmail_UserDetails_Success() {
-    	when(userDao.getUserByUsername(anyString())).thenReturn(user);
+    	User tempUser = user;
+    	tempUser.setUsername("testuser");
+    	
+    	when(userDao.getUserByEmail(anyString())).thenReturn(user);
+    	
+    	UserDetails loadedUser = userService.loadUserByEmail("test@testmail.com");
+    	
+    	System.out.println(loadedUser.getUsername());
+    	
+    	assertEquals(tempUser.getUsername(), loadedUser.getUsername());
     }
     
     @Test(expected = UsernameNotFoundException.class)
