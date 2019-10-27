@@ -6,11 +6,14 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,6 +40,9 @@ public class UserServiceTest {
     @InjectMocks
     private User user;
     
+    @Mock
+    private List<GrantedAuthority> authorities;
+    
     @Before
     public void initMocks() {
       MockitoAnnotations.initMocks(this);
@@ -61,7 +67,7 @@ public class UserServiceTest {
         
         JwtResponse actualToken = userService.signup(user);
         
-        assertEquals(actualToken, expectedToken);
+        assertEquals(actualToken.getToken(), expectedToken);
     }
     
     @Test
@@ -88,7 +94,7 @@ public class UserServiceTest {
         
         JwtResponse actualToken = userService.login(user);
         
-        assertEquals(actualToken, expectedToken);
+        assertEquals(actualToken.getToken(), expectedToken);
     }
     
     @Test
@@ -123,8 +129,6 @@ public class UserServiceTest {
     	
     	UserDetails loadedUser = userService.loadUserByUsername("testuser");
     	
-    	System.out.println(loadedUser.getUsername());
-    	
     	assertEquals(tempUser.getUsername(), loadedUser.getUsername());
     }
     
@@ -139,7 +143,11 @@ public class UserServiceTest {
     
     @Test // TODO: Finish
     public void loadUserByEmail_UserDetails_Success() {
-    	when(userDao.getUserByUsername(anyString())).thenReturn(user);
+    	when(userDao.getUserByEmail(anyString())).thenReturn(user);
+    	
+    	UserDetails loadedUser = userService.loadUserByEmail("test@testmail.com");
+    	
+    	assertEquals(loadedUser.getUsername(), user.getUsername());
     }
     
     @Test(expected = UsernameNotFoundException.class)

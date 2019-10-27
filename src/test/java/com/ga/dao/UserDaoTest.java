@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class UserDaoTest {
     @Mock
     Query<User> query;
     
-    @InjectMocks
+    @Mock
     private List<User> userList;
     
     @Before
@@ -84,7 +85,6 @@ public class UserDaoTest {
     
     @Test
     public void login_User_Success() {
-    	when(session.createQuery(anyString())).thenReturn(query);
     	when(query.getSingleResult()).thenReturn(user);
     	
         User savedUser = userDao.login(user);
@@ -95,15 +95,38 @@ public class UserDaoTest {
     
     @Test
     public void delete_UserId_Success() {
-    	userDao.signup(user);
-    	
-    	when(session.createQuery(anyString())).thenReturn(query);
+    	when(session.get(User.class, user.getId())).thenReturn(user);
     	when(query.getSingleResult()).thenReturn(user);
-//    	
-    	
-//    	System.out.println(savedUser);
+
     	Long deletedUserId = userDao.deleteUser(user.getId());
     	
-    	assertEquals(deletedUserId, Long.valueOf(1L));
+    	assertEquals(deletedUserId, user.getId());
+    }
+    
+    @Test
+    public void getUserByUsername_User_Success() {
+    	when(query.uniqueResult()).thenReturn(user);
+    	
+    	User savedUser = userDao.getUserByUsername(user.getUsername());
+    	
+    	assertEquals(savedUser, user);
+    }
+    
+    @Test
+    public void getUserByUserId_User_Success() {
+    	when(query.uniqueResult()).thenReturn(user);
+    	
+    	User savedUser = userDao.getUserByUserId(user.getId());
+    	
+    	assertEquals(savedUser, user);
+    }
+    
+    @Test
+    public void getUserByEmail_User_Success() {
+    	when(query.uniqueResult()).thenReturn(user);
+    	
+    	User savedUser = userDao.getUserByEmail(user.getEmail());
+    	
+    	assertEquals(savedUser, user);
     }
 }
