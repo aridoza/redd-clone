@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,7 +25,11 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.ga.entity.Comment;
 import com.ga.entity.JwtResponse;
+import com.ga.entity.Post;
+import com.ga.service.CommentService;
+import com.ga.service.PostService;
 import com.ga.service.UserService;
 
 public class UserControllerTest {
@@ -34,14 +41,32 @@ public class UserControllerTest {
 	private MockMvc mockMvc;
 
 	@InjectMocks
-	UserController userController;
+	private UserController userController;
 	
 	@Mock
 	UserService userService;
 	
 	@Mock
+	PostService postService;
+	
+	@Mock
+	CommentService commentService;
+	
+	@Mock
 	User user;
+	
+	@Mock
+	Post post;
+	
+	@Mock
+	List<Post> postsList;
 
+	@Mock
+	Comment comment;
+	
+	@Mock
+	List<Comment> commentsList;
+	
 	@Before
 	public void init() {
 		mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
@@ -74,7 +99,7 @@ public class UserControllerTest {
 			.andExpect(content().json("{\"token\":\"testToken123456\", \"username\":\"testuser\"}"))
 			.andReturn();
 	      
-	    System.out.println(">>>>>>>>> signup User Success result: " + result.getResponse().getContentAsString());
+//	    System.out.println(">>>>>>>>> signup User Success result: " + result.getResponse().getContentAsString());
 	}
 	
 	@Test
@@ -93,7 +118,7 @@ public class UserControllerTest {
 			.andExpect(content().json("{\"token\":\"testToken123456\",\"username\":\"testuser\"}"))
 			.andReturn();
 		
-		System.out.println(">>>>>>>>> signup User Success result: " + result.getResponse().getContentAsString());
+//		System.out.println(">>>>>>>>> signup User Success result: " + result.getResponse().getContentAsString());
 	}
 	
 	@Test
@@ -110,7 +135,50 @@ public class UserControllerTest {
 				.andExpect(content().string("1"))
 				.andReturn();
 		
-		System.out.println(">>>>>>>>> delete User Success result: " + result.getResponse().getContentAsString());
+//		System.out.println(">>>>>>>>> delete User Success result: " + result.getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void getPostsByUsername_Posts_Success() throws Exception {
+		String testToken = "testToken12345";
+		
+		post.setId(1L);
+		post.setTitle("test title");
+		post.setDescription("test description");
+		
+		postsList.add(post);
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/user/post");
+		
+		when(postService
+				.listPostsByUsername(testToken))
+				.thenReturn(postsList);
+		
+		MvcResult result = mockMvc.perform(requestBuilder)
+				.andExpect(status().isOk())
+				.andExpect(content().json("{\"id\": 1,\"title\":\"test title\",\"description\":\"test description\"}"))
+				.andReturn();
+	}
+	
+	@Test
+	public void getCommentsByUsername_Comments_Success() throws Exception {
+		String testToken = "testToken12345";
+		
+		comment.setId(1L);
+		comment.setText("test comment");
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/user/comment");
+		
+		when(commentService
+				.listCommentsByUsername(testToken));
+		
+		MvcResult result = mockMvc.perform(requestBuilder)
+				.andExpect(status().isOk())
+				.andExpect(content().json("{\"id\": 1,\"text\":\"test comment\"}"))
+				.andReturn();
+		
 	}
 	
 	private static String createUserInJson(String username, String password) {

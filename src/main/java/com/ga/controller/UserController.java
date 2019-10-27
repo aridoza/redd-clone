@@ -52,17 +52,6 @@ public class UserController {
 		return "Hello World!!";
 	}
 	
-	@GetMapping("/listHeaders")
-	public ResponseEntity<String> listAllHeaders(
-	  @RequestHeader Map<String, String> headers) {
-		String jwtToken = headers.get("authorization").substring(7);
-		
-		System.out.println(jwtToken);    
-	 
-	    return new ResponseEntity<String>(
-	      String.format("Listed %d headers", headers.size()), HttpStatus.OK);
-	}
-	
 	// Authenticated
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/list")
@@ -73,11 +62,6 @@ public class UserController {
 	// Public
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@Valid @RequestBody User user) {
-//		Map<String, String> data = new HashMap<>();
-//		
-//		data.put("token", new JwtResponse(userService.signup(user)).getToken());
-//		data.put("username", userService.loadUserByUsername(user.getUsername()).getUsername());
-		
         return ResponseEntity.ok(userService.signup(user));
 	}
 	
@@ -85,11 +69,6 @@ public class UserController {
 	@PostMapping("/login")
 //	public ResponseEntity<?> login(@RequestBody User user) throws LoginException, EntityNotFoundException {
 	public ResponseEntity<?> login(@RequestBody User user) {
-//		Map<String, String> data = new HashMap<>();
-//		
-//		data.put("token", new JwtResponse(userService.login(user)).getToken());
-//		data.put("username", userService.loadUserByEmail(user.getEmail()).getUsername());
-		
         return ResponseEntity.ok(userService.login(user));
     }
 	
