@@ -193,16 +193,16 @@ public class UserControllerTest {
 				.header("Authorization", testToken)
 			    .contentType(MediaType.APPLICATION_JSON)
 			    .content("    {\n" + 
-			    		"        \"user\": {\n" + 
-			    		"            \"username\": \"testuser\",\n" + 
-			    		"            \"password\": \"testpass\",\n" + 
-			    		"            \"email\": \"test@testmail.com\",\n" + 
-			    		"            \"userProfile\": null,\n" + 
-			    		"            \"id\": 1\n" + 
-			    		"        },\n" + 
-			    		"        \"title\": \"test title\",\n" + 
-			    		"        \"description\": \"test description\",\n" + 
-			    		"        \"id\": 1\n" + 
+			    		"        \"user\": {" + 
+			    		"            \"username\": \"testuser\"," + 
+			    		"            \"password\": \"testpass\"," + 
+			    		"            \"email\": \"test@testmail.com\"," + 
+			    		"            \"userProfile\": null," + 
+			    		"            \"id\": 1" + 
+			    		"        }," + 
+			    		"        \"title\": \"test title\"," + 
+			    		"        \"description\": \"test description\"," + 
+			    		"        \"id\": 1" + 
 			    		"    }");
 		
 		when(postService.listPostsByUsername(anyString())).thenReturn(postsList);
@@ -224,6 +224,8 @@ public class UserControllerTest {
 		comment.setUser(user);
 		comment.setText("test comment");
 		
+		commentsList.add(comment);
+		
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 				.get("/user/comment");
 		
@@ -232,7 +234,16 @@ public class UserControllerTest {
 		
 		MvcResult result = mockMvc.perform(requestBuilder)
 				.andExpect(status().isOk())
-				.andExpect(content().json("{\"id\": 1,\"text\":\"test comment\"}"))
+				.andExpect(content().json("{" +
+						"\"user\": {" + 
+						"\"username\": \"testuser\"," + 
+						"\"password\": \"testpass\"," + 
+						"\"email\": \"test@testmail.com\"," + 
+						"\"userProfile\": null," + 
+						"\"\"id\": 1," + 
+						"}," + 
+						"\"id\": 1," + 
+						"\"text\":\"test comment\"}"))
 				.andReturn();
 		
 	}
