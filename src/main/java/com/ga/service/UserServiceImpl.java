@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 				&& bCryptPasswordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
 			UserDetails userDetails = loadUserByUsername(foundUser.getUsername());
 
-			return new JwtResponse(jwtUtil.generateToken(userDetails), user.getUsername());
+			return new JwtResponse(jwtUtil.generateToken(userDetails), foundUser.getUsername());
 		}
 		//throw new LoginException("Username or password incorrect.");
 		return null;
