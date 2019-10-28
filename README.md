@@ -14,6 +14,7 @@ By Ariel Mendoza and Steven Huang
 * Spring
 * Hibernate
 * Spring Security
+* Mockito
 * Bcrypt
 * JSON Web Tokens
 
