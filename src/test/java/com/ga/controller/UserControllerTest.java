@@ -1,13 +1,18 @@
 package com.ga.controller;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,22 +21,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.ga.entity.Comment;
 import com.ga.entity.JwtResponse;
 import com.ga.entity.Post;
+import com.ga.entity.User;
 import com.ga.service.CommentService;
 import com.ga.service.PostService;
 import com.ga.service.UserService;
-
 public class UserControllerTest {
 
     @Rule
@@ -52,8 +56,11 @@ public class UserControllerTest {
 	@Mock
 	CommentService commentService;
 	
-	@Mock
+	@InjectMocks
 	User user;
+	
+	@Mock
+	List<User> usersList;
 	
 	@Mock
 	Post post;
@@ -67,8 +74,16 @@ public class UserControllerTest {
 	@Mock
 	List<Comment> commentsList;
 	
+	@Mock
+	Map<String, String> headers;
+	
 	@Before
 	public void init() {
+        user.setId(1L);
+		user.setUsername("testuser");
+		user.setPassword("testpass");
+		user.setEmail("test@testmail.com");
+		
 		mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
 	}
 	
@@ -78,9 +93,28 @@ public class UserControllerTest {
 			.get("/user/hello")
 			.accept(MediaType.APPLICATION_JSON);
 		
+		System.out.println(user);
+		System.out.println(usersList.get(0));
+		
 		mockMvc.perform(requestBuilder)
 			.andExpect(status().isOk())
 			.andExpect(content().string("Hello World!!"));
+	}
+	
+	@Test
+	public void listUsers_UserList_Succes() throws Exception {           
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/user/list")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createUserInJsonAllFields("testuser", "testpass", "test@testmail.com"));
+        
+        when(userService.listUsers()).thenReturn(Arrays.asList(user));
+        
+        mockMvc.perform(requestBuilder) 
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$", hasSize(1)));
+			
 	}
 	
 	@Test
@@ -140,32 +174,54 @@ public class UserControllerTest {
 	
 	@Test
 	public void getPostsByUsername_Posts_Success() throws Exception {
-		String testToken = "testToken12345";
+		String testToken = "Bearer testToken12345";
+		
+		headers = new HashMap<>();
+		headers.put("authorization", testToken);
+		
+		System.out.println("headers: " + headers.get("authorization"));
 		
 		post.setId(1L);
+		post.setUser(user);
 		post.setTitle("test title");
 		post.setDescription("test description");
 		
 		postsList.add(post);
 		
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
-				.get("/user/post");
+				.get("/user/post")
+				.header("Authorization", testToken)
+			    .contentType(MediaType.APPLICATION_JSON)
+			    .content("    {\n" + 
+			    		"        \"user\": {\n" + 
+			    		"            \"username\": \"testuser\",\n" + 
+			    		"            \"password\": \"testpass\",\n" + 
+			    		"            \"email\": \"test@testmail.com\",\n" + 
+			    		"            \"userProfile\": null,\n" + 
+			    		"            \"id\": 1\n" + 
+			    		"        },\n" + 
+			    		"        \"title\": \"test title\",\n" + 
+			    		"        \"description\": \"test description\",\n" + 
+			    		"        \"id\": 1\n" + 
+			    		"    }");
 		
-		when(postService
-				.listPostsByUsername(testToken))
-				.thenReturn(postsList);
+		when(postService.listPostsByUsername(anyString())).thenReturn(postsList);
+		when(userController.getPostsByUsername(headers)).thenReturn(Arrays.asList(post));
 		
 		MvcResult result = mockMvc.perform(requestBuilder)
 				.andExpect(status().isOk())
-				.andExpect(content().json("{\"id\": 1,\"title\":\"test title\",\"description\":\"test description\"}"))
 				.andReturn();
 	}
 	
 	@Test
 	public void getCommentsByUsername_Comments_Success() throws Exception {
-		String testToken = "testToken12345";
+		String testToken = "Bearer testToken12345";
+		
+		headers = new HashMap<>();
+		headers.put("authorization", testToken);
 		
 		comment.setId(1L);
+		comment.setUser(user);
 		comment.setText("test comment");
 		
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
