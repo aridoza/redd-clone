@@ -11,7 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,6 +32,7 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.ga.config.JwtUtil;
+import com.ga.dao.CommentDaoImpl;
 import com.ga.entity.Comment;
 import com.ga.entity.Post;
 import com.ga.entity.User;
@@ -46,6 +49,9 @@ public class CommentControllerTest {
 	
 	private MockMvc mockMvc;
 	
+	@Mock
+	Map<String, String> headers;
+	
 	@InjectMocks
 	CommentController commentController;
 	
@@ -54,6 +60,9 @@ public class CommentControllerTest {
 	
 	@Mock
 	PostServiceImpl postService;
+	
+	@Mock
+	CommentDaoImpl commentDao;
 
 	@Mock
 	private Post post;
@@ -73,6 +82,7 @@ public class CommentControllerTest {
 	@Before
 	public void init() {
 		mockMvc = MockMvcBuilders.standaloneSetup(commentController).build();
+		headers.put("Authorization","Bearer 123456");
 	}
 	
 	@Before
@@ -156,21 +166,31 @@ public class CommentControllerTest {
 		
 		String localToken = jwtUtil.generateToken(userDetails);
 		
-		when(postService.createPost(any(), eq("batman"))).thenReturn(firstPost);
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.addHeader("Authorization","Bearer 123456");
+		
+		headers.put("Authorization","Bearer 123456");
+		
+		when(postService.createPost(firstPost, "batman")).thenReturn(firstPost);
 		when(postService.listPosts()).thenReturn(Arrays.asList(firstPost));
-		when(commentService.createComment(comment, post.getId(), localToken)).thenReturn(comment);
+		when(commentService.createComment(comment, firstPost.getId(), "batman")).thenReturn(comment);
 		
-		MvcResult result = mockMvc.perform(post("/comment/1")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(createCommentInJson(comment, post.getId(), localToken))
-				.accept(MediaType.APPLICATION_JSON)
-				)
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-				.andExpect(jsonPath("$", hasSize(1)))
-				.andReturn();
+		Comment newComment = commentController.createComment(comment, post.getId(), headers);
 		
-		System.out.println(result);
+//		MvcResult result = mockMvc.perform(post("/comment/1")
+//				.contentType(MediaType.APPLICATION_JSON_UTF8)
+//				.content(createCommentInJson(comment, post.getId(), "batman"))
+//				.accept(MediaType.APPLICATION_JSON)
+//				)
+//				.andExpect(status().isOk())
+//				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//				.andExpect(jsonPath("$", hasSize(1)))
+//				.andReturn();
+//		
+//		System.out.println(result);
+		
+		assertNotNull(newComment);
+		assertEquals(newComment.getText(), comment.getText());
 		
 		verify(commentService, times(1)).createComment(any(), any(), any());
 		verifyNoMoreInteractions(commentService);
