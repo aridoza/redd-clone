@@ -2,6 +2,18 @@
 
 By Ariel Mendoza and Steven Huang
 
+- [Technologies Used](#technologies-used)
+  * [Languages](#languages)
+  * [Libraries and Frameworks](#libraries-and-frameworks)
+  * [Tools](#tools)
+- [Installation](#installation)
+- [Approach](#approach)
+- [Challenges](#challenges)
+- [Unsolved Problems](#unsolved-problems)
+- [User Stories](#user-stories)
+- [ERD](#erd)
+- [Deliverables and Timeline](#deliverables-and-timeline)
+
 ## Technologies Used
 
 #### Languages
