@@ -54,11 +54,15 @@ For the majority of the project, we coded using paired programming during class 
 
 ## Challenges
 
-Descriptions of any major hurdles you had to overcome.
+Some of the major hurdles that we had to overcome were testing and understanding what was happening in the Dao layer. With testing, it was difficult to know what to mock and how to do it. This was especially true in the Dao and Controller layers. With understanding the Dao layer, I think it was the fact that what was occurring in the session felt a bit abstract conceptually. However, by working on this project, I believe that a lot of these challenges were bridged and our general understanding improved.
 
 ## Unsolved Problems
 
 * While the post deletion endpoint works, it wasn't implemented on the front end during the first project, so that issue persists
+* Testing
+  * getPostsByUsername tests
+  * getCommentsByUsername tests
+  * createComment tests
 
 ## User Stories
 
